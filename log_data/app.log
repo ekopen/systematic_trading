@@ -1,0 +1,27 @@
+2025-09-06 21:25:38,629 | INFO | __main__ | Starting file!
+2025-09-06 21:25:38,630 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 21:25:38,634 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.15, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 21:25:38,643 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.15, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 21:25:38,643 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.15, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 21:25:38,644 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('your_topic',)
+2025-09-06 21:25:38,645 | INFO | __main__ | Kafka consumer started. Listening for messages...
+2025-09-06 21:25:38,647 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.15, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 21:25:38,749 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.15, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 21:25:38,749 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.15, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 21:25:38,853 | INFO | kafka.cluster | Coordinator for group/test-group is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 21:25:38,853 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group test-group
+2025-09-06 21:25:38,854 | INFO | kafka.coordinator.heartbeat | Starting new heartbeat thread
+2025-09-06 21:25:38,855 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group test-group
+2025-09-06 21:25:38,855 | INFO | kafka.coordinator | Failed to join group test-group: NodeNotReadyError: coordinator-1
+2025-09-06 21:25:38,856 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.15, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 21:25:38,957 | INFO | kafka.coordinator | Failed to join group test-group: NodeNotReadyError: coordinator-1
+2025-09-06 21:25:38,958 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.15, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 21:25:39,058 | INFO | kafka.coordinator | (Re-)joining group test-group
+2025-09-06 21:25:39,062 | INFO | kafka.coordinator | Received member id kafka-python-2.2.15-44fb06e1-a949-4211-a4d5-f57e1db912de for group test-group; will retry join-group
+2025-09-06 21:25:39,062 | INFO | kafka.coordinator | Failed to join group test-group: [Error 79] MemberIdRequiredError
+2025-09-06 21:25:39,063 | INFO | kafka.coordinator | (Re-)joining group test-group
+2025-09-06 21:25:42,067 | INFO | kafka.coordinator | Successfully joined group test-group <Generation 8 (member_id: kafka-python-2.2.15-44fb06e1-a949-4211-a4d5-f57e1db912de, protocol: range)>
+2025-09-06 21:25:42,067 | INFO | kafka.coordinator | Elected group leader -- performing partition assignments using range
+2025-09-06 21:25:42,071 | INFO | kafka.consumer.subscription_state | Updated partition assignment: [TopicPartition(topic='your_topic', partition=0)]
+2025-09-06 21:25:42,072 | INFO | kafka.coordinator.consumer | Setting newly assigned partitions {TopicPartition(topic='your_topic', partition=0)} for group test-group
+2025-09-06 21:29:08,832 | INFO | __main__ | Received stop signal. Shutting down...
