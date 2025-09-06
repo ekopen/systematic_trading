@@ -1,5 +1,9 @@
-import logging, threading, signal
-from kafka import KafkaConsumer
+# main.py
+# starts and stops the data pipeline
+
+# imports
+import threading, time, signal, logging
+from kafka_consumer import start_consumer
 
 # logging 
 logging.basicConfig(
@@ -12,8 +16,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-logger.info("Starting file!")
-
 # shutdown
 stop_event = threading.Event()
 def handle_signal(signum, frame):
@@ -21,20 +23,19 @@ def handle_signal(signum, frame):
     stop_event.set()
 signal.signal(signal.SIGTERM, handle_signal)
 
-
+# start/stop loop
 if __name__ == "__main__":
     try:
-        logger.info("Starting Kafka consumer...")
-        consumer = KafkaConsumer(
-            "your_topic",
-            bootstrap_servers=["159.65.41.22:9092"],
-            auto_offset_reset="earliest",
-            group_id="test-group"
-        )
+        logger.info("System starting.")
 
-        logger.info("Kafka consumer started. Listening for messages...")
-        for msg in consumer:
-            logger.info(msg.value)
+        consumer_thread = threading.Thread(target=start_consumer, args=(stop_event,))
+        consumer_thread.start()
+
+        while not stop_event.is_set():
+             time.sleep(1)
+
+        consumer_thread.join(timeout=3)
+        logger.info("System shutdown complete.")
 
     except Exception as e:
         logger.exception("Fatal error in main loop")

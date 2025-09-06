@@ -25,3 +25,405 @@
 2025-09-06 21:25:42,071 | INFO | kafka.consumer.subscription_state | Updated partition assignment: [TopicPartition(topic='your_topic', partition=0)]
 2025-09-06 21:25:42,072 | INFO | kafka.coordinator.consumer | Setting newly assigned partitions {TopicPartition(topic='your_topic', partition=0)} for group test-group
 2025-09-06 21:29:08,832 | INFO | __main__ | Received stop signal. Shutting down...
+2025-09-06 16:30:09,170 | INFO | __main__ | Starting file!
+2025-09-06 16:30:09,172 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:30:09,173 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:30:09,322 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:30:09,322 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:30:09,322 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('your_topic',)
+2025-09-06 16:30:09,322 | INFO | __main__ | Kafka consumer started. Listening for messages...
+2025-09-06 16:30:09,373 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:30:09,478 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:30:09,479 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:30:09,627 | INFO | kafka.cluster | Coordinator for group/test-group is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:30:09,628 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group test-group
+2025-09-06 16:30:09,628 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:30:09,629 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group test-group
+2025-09-06 16:30:09,629 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:30:09,731 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:30:09,832 | INFO | kafka.coordinator | (Re-)joining group test-group
+2025-09-06 16:30:09,872 | INFO | kafka.coordinator | (Re-)joining group test-group
+2025-09-06 16:30:12,932 | INFO | kafka.coordinator | Elected group leader -- performing partition assignments using range
+2025-09-06 16:30:12,979 | INFO | kafka.coordinator | Successfully joined group test-group with generation 10
+2025-09-06 16:30:12,979 | INFO | kafka.consumer.subscription_state | Updated partition assignment: [TopicPartition(topic='your_topic', partition=0)]
+2025-09-06 16:30:12,980 | INFO | kafka.coordinator.consumer | Setting newly assigned partitions {TopicPartition(topic='your_topic', partition=0)} for group test-group
+2025-09-06 16:35:20,140 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:35:23,033 | INFO | __main__ | Starting file!
+2025-09-06 16:35:23,033 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:35:23,037 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:35:23,177 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:35:23,178 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:35:23,178 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:35:23,178 | INFO | __main__ | Kafka consumer started. Listening for messages...
+2025-09-06 16:35:23,226 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:35:23,327 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:35:23,327 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:35:23,474 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:35:23,474 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:35:23,474 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:35:23,474 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:35:23,474 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:35:23,579 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:35:23,680 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:35:23,724 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:35:24,197 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:39:38,179 | INFO | __main__ | Starting file!
+2025-09-06 16:39:38,179 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:39:38,179 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:39:38,335 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:39:38,335 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:39:38,335 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:39:38,386 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:39:38,487 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:39:38,487 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:39:38,638 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:39:38,638 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:39:38,640 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:39:38,640 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:39:38,641 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:39:38,742 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:39:38,833 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:39:38,851 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:09,208 | INFO | __main__ | Starting file!
+2025-09-06 16:40:09,208 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:09,213 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:09,379 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:09,379 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:09,380 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:09,424 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:09,526 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:09,526 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:09,677 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:09,677 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:09,677 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:09,678 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:09,679 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:09,780 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:09,878 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:09,880 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:09,881 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:10,031 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:10,031 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:10,032 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:10,077 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:10,178 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:10,178 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:10,328 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:10,331 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:10,331 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:10,331 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:10,331 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:10,433 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:10,531 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:10,532 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:10,533 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:10,677 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:10,677 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:10,677 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:10,732 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:10,834 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:10,834 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:10,985 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:10,986 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:10,986 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:10,987 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:10,987 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:11,088 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:11,185 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:11,185 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:11,186 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:11,351 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:11,352 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:11,352 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:11,395 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:11,498 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:11,499 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:11,649 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:11,649 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:11,650 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:11,650 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:11,651 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:11,752 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:11,852 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:11,857 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:11,857 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:12,005 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:12,005 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:12,005 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:12,054 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:12,154 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:12,154 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:12,302 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:12,302 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:12,302 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:12,302 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:12,302 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:12,407 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:12,506 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:12,506 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:12,507 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:12,656 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:12,656 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:12,657 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:12,703 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:12,805 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:12,805 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:12,954 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:12,954 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:12,954 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:12,955 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:12,955 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:13,056 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:13,156 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:13,158 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:13,159 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:13,331 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:13,332 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:13,332 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:13,332 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:13,333 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:13,334 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:13,334 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:13,335 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:13,381 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:13,483 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:13,483 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:13,632 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:13,632 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:13,633 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:13,633 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:13,634 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:13,735 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:13,835 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:13,838 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:13,838 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:13,984 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:13,984 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:13,984 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:14,027 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:14,128 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:14,128 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:14,271 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:14,271 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:14,276 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:14,276 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:14,276 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:14,378 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:14,479 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:14,497 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:14,498 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:14,646 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:14,646 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:14,647 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:14,692 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:14,794 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:14,794 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:14,945 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:14,945 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:14,945 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:14,945 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:14,945 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:15,048 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:15,145 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:15,151 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:15,152 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:15,303 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:15,304 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:15,304 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:15,348 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:15,450 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:15,450 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:15,601 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:15,601 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:15,601 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:15,602 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:15,602 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:15,703 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:15,802 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:15,804 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:15,804 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:15,955 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:15,956 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:15,956 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:16,004 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:16,106 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:16,106 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:16,258 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:16,258 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:16,258 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:16,259 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:16,259 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:16,360 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:16,455 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:16,467 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:16,469 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:16,629 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:16,629 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:16,632 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:16,679 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:16,782 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:16,782 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:16,928 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:16,928 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:16,928 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:16,928 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:16,928 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:17,031 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:17,132 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:17,133 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:17,134 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:17,272 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:17,272 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:17,272 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:17,322 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:17,424 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:17,424 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:17,574 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:17,574 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:17,574 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:17,575 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:17,575 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:17,677 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:17,770 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:17,773 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:17,774 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:17,917 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:17,917 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:17,917 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:17,969 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:18,070 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:18,070 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:18,217 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:18,217 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:18,219 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:18,219 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:18,220 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:18,321 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:18,415 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:18,417 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:18,418 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:18,561 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:18,562 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:18,562 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:18,609 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:18,710 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:18,710 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:18,861 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:18,861 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:18,863 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:18,863 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:18,864 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:18,965 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:19,061 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:19,063 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:19,063 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:19,209 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:19,210 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:19,210 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:19,256 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:19,358 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:19,358 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:19,506 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:19,506 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:19,506 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:19,506 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:19,506 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:19,611 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:19,709 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:19,711 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:19,711 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:19,860 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:40:19,861 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:19,861 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:40:19,914 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:20,016 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:20,017 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:40:20,163 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:40:20,163 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:40:20,164 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:40:20,164 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:40:20,165 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:20,266 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:40:20,362 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:40:20,362 | INFO | __main__ | Starting Kafka consumer...
+2025-09-06 16:40:20,364 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,364 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,364 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,364 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,365 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,365 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,365 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,365 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,366 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,367 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:40:20,544 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,545 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:40:20,555 | INFO | kafka.coordinator | Stopping heartbeat thread
+2025-09-06 16:48:01,397 | INFO | __main__ | System starting.
+2025-09-06 16:48:37,649 | INFO | __main__ | System starting.
+2025-09-06 16:48:59,855 | INFO | __main__ | System starting.
+2025-09-06 16:48:59,855 | INFO | kafka_consumer | Kafka consumer started.
+2025-09-06 16:48:59,859 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:48:59,999 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:48:59,999 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:49:00,001 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:49:00,038 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:49:00,146 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:49:00,146 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:49:00,298 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:49:00,299 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:49:00,299 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:49:00,299 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:49:00,299 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:49:00,401 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:49:00,501 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:49:00,546 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:49:03,098 | INFO | kafka.coordinator | Successfully joined group ticks_ingestor with generation 27
+2025-09-06 16:49:03,098 | INFO | kafka.consumer.subscription_state | Updated partition assignment: []
+2025-09-06 16:49:03,099 | INFO | kafka.coordinator.consumer | Setting newly assigned partitions set() for group ticks_ingestor
+2025-09-06 16:51:35,631 | INFO | __main__ | System starting.
+2025-09-06 16:51:35,631 | INFO | kafka_consumer | Kafka consumer started.
+2025-09-06 16:51:35,637 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:51:35,773 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:51:35,773 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:51:35,773 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:51:35,825 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:51:35,931 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:51:35,931 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:51:36,073 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:51:36,073 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:51:36,073 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:51:36,073 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:51:36,073 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:51:36,180 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:51:36,273 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:51:36,322 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:51:40,491 | INFO | kafka.coordinator | Successfully joined group ticks_ingestor with generation 28
+2025-09-06 16:51:40,493 | INFO | kafka.consumer.subscription_state | Updated partition assignment: []
+2025-09-06 16:51:40,493 | INFO | kafka.coordinator.consumer | Setting newly assigned partitions set() for group ticks_ingestor
+2025-09-06 16:56:49,719 | INFO | __main__ | System starting.
+2025-09-06 16:56:49,719 | INFO | kafka_consumer | Kafka consumer started.
+2025-09-06 16:56:49,724 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:56:49,865 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <checking_api_versions_recv> [IPv4 ('159.65.41.22', 9092)]>: Broker version identified as 2.6
+2025-09-06 16:56:49,865 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:56:49,866 | INFO | kafka.consumer.subscription_state | Updating subscribed topics to: ('price_ticks',)
+2025-09-06 16:56:49,912 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:56:50,015 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:56:50,016 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=bootstrap-0 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Closing connection. 
+2025-09-06 16:56:50,166 | INFO | kafka.cluster | Coordinator for group/ticks_ingestor is BrokerMetadata(nodeId='coordinator-1', host='159.65.41.22', port=9092, rack=None)
+2025-09-06 16:56:50,166 | INFO | kafka.coordinator | Discovered coordinator coordinator-1 for group ticks_ingestor
+2025-09-06 16:56:50,166 | INFO | kafka.coordinator | Starting new heartbeat thread
+2025-09-06 16:56:50,166 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:56:50,166 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connecting> [IPv4 ('159.65.41.22', 9092)]>: connecting to 159.65.41.22:9092 [('159.65.41.22', 9092) IPv4]
+2025-09-06 16:56:50,270 | INFO | kafka.conn | <BrokerConnection client_id=kafka-python-2.2.4, node_id=coordinator-1 host=159.65.41.22:9092 <connected> [IPv4 ('159.65.41.22', 9092)]>: Connection complete.
+2025-09-06 16:56:50,364 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:56:50,412 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:56:53,243 | WARNING | kafka.coordinator | Heartbeat failed for group ticks_ingestor because it is rebalancing
+2025-09-06 16:56:53,243 | INFO | kafka.coordinator.consumer | Revoking previously assigned partitions set() for group ticks_ingestor
+2025-09-06 16:56:53,243 | INFO | kafka.coordinator | (Re-)joining group ticks_ingestor
+2025-09-06 16:56:53,341 | INFO | kafka.coordinator | Successfully joined group ticks_ingestor with generation 29
+2025-09-06 16:56:53,341 | INFO | kafka.consumer.subscription_state | Updated partition assignment: []
+2025-09-06 16:56:53,341 | INFO | kafka.coordinator.consumer | Setting newly assigned partitions set() for group ticks_ingestor
+2025-09-06 16:56:53,352 | INFO | kafka.coordinator | Successfully joined group ticks_ingestor with generation 29
+2025-09-06 16:56:53,352 | INFO | kafka.consumer.subscription_state | Updated partition assignment: []
+2025-09-06 16:56:53,353 | INFO | kafka.coordinator.consumer | Setting newly assigned partitions set() for group ticks_ingestor
