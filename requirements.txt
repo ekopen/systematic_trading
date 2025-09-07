@@ -1,0 +1,7 @@
+kafka-python
+json
+alpaca-trade-api
+threading
+time
+signal
+logging
