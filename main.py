@@ -3,8 +3,7 @@
 
 # imports
 import threading, time, signal, logging
-from kafka_consumer import start_consumer
-from signal_engine import start_signal_genetator
+from signal_engine import start_signal_generator
 
 # logging 
 logging.basicConfig(
@@ -30,16 +29,12 @@ if __name__ == "__main__":
     try:
         logger.info("System starting.")
 
-        consumer_thread = threading.Thread(target=start_consumer, args=(stop_event,))
-        consumer_thread.start()
-
-        signal_threaad = threading.Thread(target=start_signal_genetator, args=(stop_event,))
-        signal_threaad.start()
+        signal_engine_thread = threading.Thread(target=start_signal_generator, args=(stop_event,))
+        signal_engine_thread.start()
 
         while not stop_event.is_set():
              time.sleep(1)
 
-        consumer_thread.join(timeout=1)
         logger.info("System shutdown complete.") 
 
     except KeyboardInterrupt:
