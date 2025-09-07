@@ -1,3 +1,0 @@
-clickhouse-connect
-kafka-python
-json
