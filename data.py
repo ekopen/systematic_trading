@@ -6,9 +6,9 @@ from kafka import KafkaConsumer
 import logging
 logger = logging.getLogger(__name__)
 
-# clickhouse client from and kafka consumer the data pipeline
+# clickhouse clients for both market and portfolio data, and kafka consumer for market data
 
-def get_pricing_data():      
+def market_clickhouse_client():      
     client = clickhouse_connect.get_client(
         host="159.65.41.22",
         port=8123,
@@ -17,6 +17,16 @@ def get_pricing_data():
         database="default"
     )
     return client
+
+def trading_clickhouse_client():
+    return clickhouse_connect.get_client(
+        # host="clickhouse",
+        host="localhost",
+        port=8123,
+        username="default",
+        password="mysecurepassword",
+        database="default"
+    )
 
 def get_kafka_data(kafka_topic):
     consumer = KafkaConsumer(

@@ -1,5 +1,26 @@
 services:
 
+# ----------- data storage ----------------#
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
+    ports:
+      - "8123:8123" #HTTP interface
+      - "9000:9000" # native interface
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: mysecurepassword
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD-SHELL", "clickhouse-client --query 'SELECT 1' --user=default --password=mysecurepassword || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
 # ----------- main pipeline ----------------#
   pipeline:
     build: .
@@ -8,11 +29,13 @@ services:
       - .env
     ports:
       - "8001:8001"
-    # depends_on:
-    #   - kafka
-    #   - clickhouse
+    depends_on:
+      clickhouse:
+        condition: service_healthy
     volumes:
       - ./log_data:/app/log_data
     restart: unless-stopped
     stop_grace_period: 5s
 
+volumes:
+  clickhouse_data:

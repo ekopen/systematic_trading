@@ -3,13 +3,13 @@
 
 import logging, time, json
 from execution import execute_trade
-from market_data import get_latest_price
+from data import get_latest_price
 logger = logging.getLogger(__name__)
 
 
-
 # begins generating signals for the execution engine
-def generate_signals(stop_event, client, consumer):
+def generate_signals(stop_event, market_data_client, consumer, trading_data_client):
+
 
     logger.info("Signal generator started.")
 
@@ -20,7 +20,7 @@ def generate_signals(stop_event, client, consumer):
                 # Strategy implemented below:
                 logger.info("Starting signal generation.")
                 # avg price
-                recent_avg_df = client.query_df("SELECT AVG(price) AS recent_avg FROM (SELECT price FROM ticks_db ORDER BY timestamp DESC LIMIT 100) sub")
+                recent_avg_df = market_data_client.query_df("SELECT AVG(price) AS recent_avg FROM (SELECT price FROM ticks_db ORDER BY timestamp DESC LIMIT 100) sub")
                 recent_avg_price = recent_avg_df.values[0][0]
                 logger.info(f"Recent average price: {recent_avg_price}")
 
@@ -39,9 +39,9 @@ def generate_signals(stop_event, client, consumer):
                 symbol = "ETH"
                 # buy if price above avg, sell if below
                 if current_price > recent_avg_price:
-                    execute_trade("SELL", execution_price, qty, strategy_name, symbol)
+                    execute_trade(trading_data_client, "SELL", execution_price, qty, strategy_name, symbol)
                 if current_price < recent_avg_price:
-                    execute_trade("BUY", execution_price, qty, strategy_name, symbol)
+                    execute_trade(trading_data_client, "BUY", execution_price, qty, strategy_name, symbol)
 
                 logger.info("Signal has been generated and sent to execution engine.")
                 # time out parameter
