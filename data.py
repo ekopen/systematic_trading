@@ -39,7 +39,7 @@ def get_kafka_data(kafka_topic):
     return consumer
 
 # return latest message from the consumer
-def get_latest_price(consumer):
+def get_latest_price(consumer, timeout_ms=500):
     consumer.poll(timeout_ms=0)
     try:
         for tp in consumer.assignment():
@@ -49,3 +49,15 @@ def get_latest_price(consumer):
     except Exception:
         logger.exception("Error getting latest message from Kafka consumer")
         return None
+    
+# def get_latest_price(consumer, timeout_ms=1000):
+#     try:
+#         records = consumer.poll(timeout_ms=timeout_ms)
+#         last = None
+#         for tp, msgs in records.items():
+#             if msgs:
+#                 last = msgs[-1] if (last is None or msgs[-1].timestamp > last.timestamp) else last
+#         return last 
+#     except Exception:
+#         logger.exception("Error getting latest message from Kafka consumer")
+#         return None

@@ -10,14 +10,13 @@ logger = logging.getLogger(__name__)
 # begins generating signals for the execution engine
 def generate_signals(stop_event, market_data_client, consumer, trading_data_client):
 
-
     logger.info("Signal generator started.")
 
     try:
         while not stop_event.is_set():
             try:
 
-                # Strategy implemented below:
+                # ----------STRATEGY-------------------------------------------
                 logger.info("Starting signal generation.")
                 # avg price
                 recent_avg_df = market_data_client.query_df("SELECT AVG(price) AS recent_avg FROM (SELECT price FROM ticks_db ORDER BY timestamp DESC LIMIT 100) sub")
@@ -26,27 +25,36 @@ def generate_signals(stop_event, market_data_client, consumer, trading_data_clie
 
                 # most recent price
                 msg = get_latest_price(consumer)
-                current_price = json.loads(msg.value.decode("utf-8")).get("price")
-                logger.info(f"Latest price: {current_price}")
-            
-                # realistic execution price (one second delay) #MAYBE MOVE THIS TO EXECUTION!
-                time.sleep(1)
-                msg = get_latest_price(consumer)
-                execution_price = json.loads(msg.value.decode("utf-8")).get("price")
+                model_price = json.loads(msg.value.decode("utf-8")).get("price")
+                logger.info(f"Latest price: {model_price}")
 
                 qty = 1
                 strategy_name = "MeanReversion"
                 symbol = "ETH"
                 # buy if price above avg, sell if below
-                if current_price > recent_avg_price:
-                    execute_trade(trading_data_client, "SELL", execution_price, qty, strategy_name, symbol)
-                if current_price < recent_avg_price:
-                    execute_trade(trading_data_client, "BUY", execution_price, qty, strategy_name, symbol)
+                if model_price > recent_avg_price:
+                    decision= "SELL"
+                if model_price < recent_avg_price:
+                    decision= "BUY"
 
-                logger.info("Signal has been generated and sent to execution engine.")
-                # time out parameter
-                time.sleep(5)
+                logger.info("Signal has been generated.")
+                
+                # ----------STRATEGY-------------------------------------------------
+
+                try:
+                    logger.info("Sending signal to execution engine.")
+                    # realistic execution price (one second delay) #MAYBE MOVE THIS TO EXECUTION!
+                    time.sleep(1)
+                    msg = get_latest_price(consumer)
+                    execution_price = json.loads(msg.value.decode("utf-8")).get("price")
+                    execute_trade(trading_data_client, decision, model_price, execution_price, qty, strategy_name, symbol)
+                    logger.info("Signal sent to execution engine.")
+
+                except Exception:
+                    logger.exception("Error sending signal to execution engine.")
+
                 logger.info("Waiting for next signal generation.")
+                time.sleep(5)
 
             except Exception:
                 logger.exception("Error in signal generator loop")

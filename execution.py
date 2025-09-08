@@ -3,41 +3,43 @@
 
 import logging
 logger = logging.getLogger(__name__)
-from portfolio import insert_transaction
+from portfolio import portfolio_key_order_update
 
-def celte_execution_table(client):
-
-    logger.info("Deleting portfolio table if exists.")
-    client.command("DROP TABLE IF EXISTS portfolio_db SYNC")
-    logger.info("Portfolio table deleted in ClickHouse.")
+def delete_execution_table(client):
+    logger.info("Deleting execution table if exists.")
+    client.command("DROP TABLE IF EXISTS execution_db SYNC")
+    logger.info("Execution table deleted in ClickHouse.")
 
 def create_execution_table(client):
-    # build in TTL eventually
     logger.info("Creating execution table if not exists.")
     client.command("""
         CREATE TABLE IF NOT EXISTS execution_db (
             time DateTime DEFAULT now(),
-            cash_balance Float64,
             symbol String,
             quantity Float64,
-            market_value Float64,
+            model_price Float64,
+            executed_price Float64,
             strategy_name String
         ) ENGINE = MergeTree()
-        ORDER BY (strategy_name, symbol, transaction_time)
+        ORDER BY (strategy_name, symbol, time)
         TTL time + INTERVAL 1 DAY
     """)
-    logger.info("Portfolio table created in ClickHouse.")
+    logger.info("Execution table created in ClickHouse.")
 
+def update_execution(client, symbol, quantity, model_price, execution_price, strategy_name):
+    logger.info("Updating execution record in execution table.")
+    arr = [symbol, quantity, model_price, execution_price, strategy_name]
+    column_names = ["symbol", "quantity", "model_price","executed_price", "strategy_name"]
+    client.insert("execution_db", [arr], column_names)
+    logger.info("Execution record updated in execution table.")
 
-
-def execute_trade(client, signal, execution_price, qty, strategy_name, symbol):
+def execute_trade(client, signal, model_price, execution_price, qty, strategy_name, symbol):
 
     if signal == "BUY":
-        logger.info("Placing buy order...")
-        insert_transaction(client, signal, symbol, execution_price, qty, strategy_name)
-        logger.info(f"Submitted buy order at execution price {execution_price}")
-
+        direction = 1
     if signal == "SELL":
-        logger.info("Placing sell order...")
-        insert_transaction(client, signal, symbol, execution_price, qty, strategy_name)
-        logger.info(f"Submitted sell order at execution price {execution_price}")
+        direction = -1
+
+    logger.info(f"Placing an order with the following parameters: Signal: {signal}, {model_price}, {execution_price}, {qty}, {strategy_name}, {symbol}")
+    update_execution(client, symbol, qty * direction, model_price, execution_price, strategy_name)
+    portfolio_key_order_update(client, symbol, qty * direction, qty * direction * execution_price , strategy_name)
