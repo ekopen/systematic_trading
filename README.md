@@ -29,6 +29,7 @@ Using data from the market pipeline project, this module initiates simple tradin
 - Better orchestrate all the strategies. They should be individually turned on and off.
 - Increase complexity of trading decision logic to get out of simple buy/hold/sell. Eventually, ML should be used to fuel decisions, with dramatically more flexibility in strategy implementation. Risk considerations should be more in depth.
 - Create dashboards and get running on the server.
+- Start tracking PNL metrics, risk metrics, etc.
  
 **Known Issues:**
 -  The Kafka consumer may be inefficient right now, and should be looked into.
