@@ -2,7 +2,7 @@
 # starts and stops the trading module
 
 # imports
-import threading, time, signal, logging, json
+import threading, time, signal, logging
 from data import market_clickhouse_client, trading_clickhouse_client, get_kafka_data, get_latest_price
 from portfolio import  delete_portfolio_tables, initialize_portfolio, create_portfolio_table_key, create_portfolio_table_timeseries, portfolio_monitoring
 from execution import delete_execution_table, create_execution_table
@@ -30,13 +30,14 @@ signal.signal(signal.SIGINT, handle_signal) # CTRL+C shutdown
 
 # subscribing to a specific kafka topic
 kafka_topic = "price_ticks"
+symbol = "ETH"
+strategy_name = "MeanReversion"
 
-def start_portfolio_monitoring(stop_event, frequency, kafka_topic):
-    # Each thread gets its own client + consumer
+# logic for portfolio monitoring and signal engine threads, which need their own clients and consumers
+def start_portfolio_monitoring(stop_event, frequency, symbol, strategy_name, kafka_topic):
     client = trading_clickhouse_client()
     consumer = get_kafka_data(kafka_topic)
-    portfolio_monitoring(stop_event, frequency, consumer, client)
-
+    portfolio_monitoring(stop_event, frequency, symbol, strategy_name, consumer, client)
 def start_signal_engine(stop_event, kafka_topic):
     market_client = market_clickhouse_client()
     trading_client = trading_clickhouse_client()
@@ -48,23 +49,22 @@ if __name__ == "__main__":
     try:
         logger.info("System starting.")
 
+        # setup portfolio and execution tables
         setup_client = trading_clickhouse_client()
         delete_portfolio_tables(setup_client)
         create_portfolio_table_key(setup_client)
         create_portfolio_table_timeseries(setup_client)
-
-        # grab init price once with a temp consumer
-        init_consumer = get_kafka_data(kafka_topic)
-        init_msg = get_latest_price(init_consumer)
-        initialization_price = json.loads(init_msg.value.decode("utf-8")).get("price")
-        initialize_portfolio(setup_client, 100000, "ETH", 100000, ["MeanReversion"], initialization_price)
-        init_consumer.close()
-
         delete_execution_table(setup_client)
         create_execution_table(setup_client)
 
-        # build clients via threads
-        t1 = threading.Thread(target=start_portfolio_monitoring, args=(stop_event, MONITOR_FREQUENCY, kafka_topic))
+        # initialize starting portfolio
+        init_consumer = get_kafka_data(kafka_topic)
+        initialization_price = get_latest_price(init_consumer)
+        initialize_portfolio(setup_client, 100000, "ETH", 100000, ["MeanReversion"], initialization_price)
+        init_consumer.close()
+
+        # start frequent portfolio monitoring and signal generation via threads
+        t1 = threading.Thread(target=start_portfolio_monitoring, args=(stop_event, MONITOR_FREQUENCY, symbol, strategy_name, kafka_topic))
         t2 = threading.Thread(target=start_signal_engine, args=(stop_event, kafka_topic))
         t1.start()
         t2.start()

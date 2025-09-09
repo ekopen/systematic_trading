@@ -1,11 +1,10 @@
-# signal_engine.py
-# Signal generation module
+# signal.py
+# Signal generation module, used to generate trading signals based on market data and strategies
 
-import logging, time, json
+import logging, time
 from execution import execute_trade
 from data import get_latest_price
 logger = logging.getLogger(__name__)
-
 
 # begins generating signals for the execution engine
 def generate_signals(stop_event, market_data_client, consumer, trading_data_client):
@@ -24,8 +23,7 @@ def generate_signals(stop_event, market_data_client, consumer, trading_data_clie
                 logger.info(f"Recent average price: {recent_avg_price}")
 
                 # most recent price
-                msg = get_latest_price(consumer)
-                model_price = json.loads(msg.value.decode("utf-8")).get("price")
+                model_price = get_latest_price(consumer)
                 logger.info(f"Latest price: {model_price}")
 
                 qty = 1
@@ -40,21 +38,16 @@ def generate_signals(stop_event, market_data_client, consumer, trading_data_clie
                 logger.info("Signal has been generated.")
                 
                 # ----------STRATEGY-------------------------------------------------
-
                 try:
                     logger.info("Sending signal to execution engine.")
-                    # realistic execution price (one second delay) #MAYBE MOVE THIS TO EXECUTION!
-                    time.sleep(1)
-                    msg = get_latest_price(consumer)
-                    execution_price = json.loads(msg.value.decode("utf-8")).get("price")
-                    execute_trade(trading_data_client, decision, model_price, execution_price, qty, strategy_name, symbol)
-                    logger.info("Signal sent to execution engine.")
+                    execute_trade(trading_data_client, consumer, decision, model_price, qty, strategy_name, symbol)
+                    logger.info("Sent signal to execution engine.")
 
                 except Exception:
                     logger.exception("Error sending signal to execution engine.")
 
                 logger.info("Waiting for next signal generation.")
-                time.sleep(5)
+                time.sleep(20)
 
             except Exception:
                 logger.exception("Error in signal generator loop")

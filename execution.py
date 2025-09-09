@@ -1,9 +1,10 @@
-# execution_engine.py
-# Execution engine module
+# execution.py
+# Execution engine module, used to execute trades based on signals from the signal engine within parameters set by the risk management module
 
-import logging
+import logging, time
 logger = logging.getLogger(__name__)
 from portfolio import portfolio_key_order_update
+from data import get_latest_price
 
 def delete_execution_table(client):
     logger.info("Deleting execution table if exists.")
@@ -18,28 +19,49 @@ def create_execution_table(client):
             symbol String,
             quantity Float64,
             model_price Float64,
-            executed_price Float64,
-            strategy_name String
+            executed_price Nullable(Float64),
+            strategy_name String,
+            approval_status String,
+            approval_comment String
         ) ENGINE = MergeTree()
         ORDER BY (strategy_name, symbol, time)
         TTL time + INTERVAL 1 DAY
     """)
     logger.info("Execution table created in ClickHouse.")
 
-def update_execution(client, symbol, quantity, model_price, execution_price, strategy_name):
+def update_execution(client, symbol, quantity, model_price, execution_price, strategy_name, approval_status, approval_comment):
     logger.info("Updating execution record in execution table.")
-    arr = [symbol, quantity, model_price, execution_price, strategy_name]
-    column_names = ["symbol", "quantity", "model_price","executed_price", "strategy_name"]
-    client.insert("execution_db", [arr], column_names)
-    logger.info("Execution record updated in execution table.")
+    try:
+        arr = [symbol, quantity, model_price, execution_price, strategy_name, approval_status, approval_comment]
+        column_names = ["symbol", "quantity", "model_price","executed_price", "strategy_name", "approval_status", "approval_comment"]
+        client.insert("execution_db", [arr], column_names)
+        logger.info("Execution record updated in execution table.")
+    except Exception:
+        logger.exception("Error inserting updating execution records")
 
-def execute_trade(client, signal, model_price, execution_price, qty, strategy_name, symbol):
+def execute_trade(client, consumer, signal, model_price, qty, strategy_name, symbol):
+    logger.info("Executing trade based on signal.")
+    try:
+        if signal == "BUY":
+            direction = 1
+        if signal == "SELL":
+            direction = -1
+        if signal == "HOLD":
+            direction = 0
 
-    if signal == "BUY":
-        direction = 1
-    if signal == "SELL":
-        direction = -1
+        # approval logic
+        approval_status = "N"
+        approval_comment = "Approved"
 
-    logger.info(f"Placing an order with the following parameters: Signal: {signal}, {model_price}, {execution_price}, {qty}, {strategy_name}, {symbol}")
-    update_execution(client, symbol, qty * direction, model_price, execution_price, strategy_name)
-    portfolio_key_order_update(client, symbol, qty * direction, qty * direction * execution_price , strategy_name)
+        if approval_status == "Y":
+            # in a real system, this is where the order would be routed to the exchange/broker. to simulate real conditions, we just wait a second and get the latest price again
+            time.sleep(1)
+            execution_price = get_latest_price(consumer)
+            portfolio_key_order_update(client, symbol, qty * direction, qty * direction * execution_price , strategy_name)
+            update_execution(client, symbol, qty * direction, model_price, execution_price, strategy_name, approval_status, approval_comment)
+            logger.info(f"Trade executed and recorded. Signal: {signal}, Model Price: {model_price}, Execution Price: {execution_price}, Quantity: {qty}, Strategy: {strategy_name}, Symbol: {symbol}")
+        if approval_status == "N":
+            update_execution(client, symbol, qty * direction, model_price, None, strategy_name, approval_status, approval_comment)
+            logger.info(f"Trade not approved. Signal: {signal}, Model Price: {model_price}, Quantity: {qty}, Strategy: {strategy_name}, Symbol: {symbol}")
+    except Exception:
+        logger.exception("Error executing trade")

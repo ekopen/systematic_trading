@@ -22,20 +22,46 @@ services:
       retries: 10
 
 # ----------- main pipeline ----------------#
-  pipeline:
-    build: .
-    container_name: pipeline
-    env_file:
-      - .env
+  # pipeline:
+  #   build: .
+  #   container_name: pipeline
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "8001:8001"
+  #   depends_on:
+  #     clickhouse:
+  #       condition: service_healthy
+  #   volumes:
+  #     - ./log_data:/app/log_data
+  #   restart: unless-stopped
+  #   stop_grace_period: 5s
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
     ports:
-      - "8001:8001"
+      - "3000:3000"
     depends_on:
       clickhouse:
         condition: service_healthy
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      # Install the official ClickHouse datasource plugin
+      GF_INSTALL_PLUGINS: grafana-clickhouse-datasource
+      # For local testing you typically don't need domain/root_url settings
+      GF_SECURITY_ALLOW_EMBEDDING: "true"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
+      GF_AUTH_DISABLE_LOGIN_FORM: "false"
     volumes:
-      - ./log_data:/app/log_data
+      - grafana-data:/var/lib/grafana
+      - ./provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./dashboards:/var/lib/grafana/dashboards
     restart: unless-stopped
-    stop_grace_period: 5s
 
 volumes:
   clickhouse_data:
+  grafana-data:

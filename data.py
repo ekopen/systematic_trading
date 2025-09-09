@@ -1,13 +1,12 @@
-# data_engine.py
-# Data pipeline module
+# data.py
+# Data pipeline module, used to get clickhouse data from the market data pipeline, create clickhouse clients for the portfolios, and get kafka data
 
 import clickhouse_connect
 from kafka import KafkaConsumer
-import logging
+import logging, json
 logger = logging.getLogger(__name__)
 
-# clickhouse clients for both market and portfolio data, and kafka consumer for market data
-
+# historical market data
 def market_clickhouse_client():      
     client = clickhouse_connect.get_client(
         host="159.65.41.22",
@@ -17,7 +16,7 @@ def market_clickhouse_client():
         database="default"
     )
     return client
-
+# portfolio data
 def trading_clickhouse_client():
     return clickhouse_connect.get_client(
         # host="clickhouse",
@@ -27,7 +26,7 @@ def trading_clickhouse_client():
         password="mysecurepassword",
         database="default"
     )
-
+# real time market data
 def get_kafka_data(kafka_topic):
     consumer = KafkaConsumer(
         kafka_topic,
@@ -37,7 +36,6 @@ def get_kafka_data(kafka_topic):
         group_id=None,
     )
     return consumer
-
 # return latest message from the consumer
 def get_latest_price(consumer, timeout_ms=500):
     consumer.poll(timeout_ms=0)
@@ -45,11 +43,12 @@ def get_latest_price(consumer, timeout_ms=500):
         for tp in consumer.assignment():
             consumer.seek_to_end(tp)
         msg = next(consumer)
-        return msg
+        return json.loads(msg.value.decode("utf-8")).get("price")
     except Exception:
         logger.exception("Error getting latest message from Kafka consumer")
         return None
     
+# alternative "optimized" way to get latest message from the consumer, not currently implemented
 # def get_latest_price(consumer, timeout_ms=1000):
 #     try:
 #         records = consumer.poll(timeout_ms=timeout_ms)
