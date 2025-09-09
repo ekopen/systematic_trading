@@ -1,62 +1,96 @@
-# strategies.py
-# module that contains a default class for all strategies and the specific strategies built on it.
-
-import threading, logging
-from data import get_kafka_data, get_latest_price, market_clickhouse_client, trading_clickhouse_client
-from portfolio import initialize_portfolio, portfolio_monitoring
-from signals import generate_signals
+#strategies.py
+import time, logging
+from data import get_latest_price
+from strategy_template import StrategyTemplate
+from config import MONITOR_FREQUENCY
 logger = logging.getLogger(__name__)
 
-class StrategyTemplate:
 
-    def __init__(self, stop_event, kafka_topic, symbol, strategy_name, starting_cash, starting_mv, frequency):
-        self.stop_event = stop_event
-        self.kafka_topic = kafka_topic
-        self.symbol = symbol
-        self.strategy_name = strategy_name
+def mean_reversion_v1(market_data_client, consumer):
+    time.sleep(60)
+    recent_avg_df = market_data_client.query_df(
+        "SELECT AVG(price) AS recent_avg "
+        "FROM (SELECT price FROM ticks_db ORDER BY timestamp DESC LIMIT 1000) sub"
+    )
+    recent_avg_price = recent_avg_df.values[0][0]
+    model_price = get_latest_price(consumer)
+    qty = 1
+    if model_price > recent_avg_price:
+        decision = "SELL"
+    elif model_price < recent_avg_price:
+        decision = "BUY"
+    else:
+        decision = "HOLD"
+    return decision, model_price, qty
 
-        self.starting_cash = starting_cash
-        self.starting_mv = starting_mv
-        self.frequency = frequency
+def mean_reversion_v2(market_data_client, consumer):
+    time.sleep(60)
+    recent_avg_df = market_data_client.query_df(
+        "SELECT AVG(price) AS recent_avg "
+        "FROM (SELECT price FROM ticks_db ORDER BY timestamp DESC LIMIT 5000) sub"
+    )
+    recent_avg_price = recent_avg_df.values[0][0]
+    model_price = get_latest_price(consumer)
+    qty = 1
+    if model_price > recent_avg_price:
+        decision = "SELL"
+    elif model_price < recent_avg_price:
+        decision = "BUY"
+    else:
+        decision = "HOLD"
+    return decision, model_price, qty
 
-    def initialize_pf(self):
-        logger.info(f"Initializing portfolio for {self.symbol}, {self.strategy_name}.")
-        try:
-            init_consumer = get_kafka_data(self.kafka_topic, f"{self.strategy_name}{self.symbol}-init")
-            initialization_price = get_latest_price(init_consumer)
-            trading_client = trading_clickhouse_client()
-            initialize_portfolio(trading_client, self.starting_cash, self.symbol, self.starting_mv, self.strategy_name, initialization_price)
-            init_consumer.close()
-        except Exception:
-            logger.exception(f"Error initializing portfolio for {self.symbol}, {self.strategy_name}.")
-
-    def start_portfolio_monitoring(self):
-        logger.info(f"Beginning portfolio monitoring for {self.symbol}, {self.strategy_name}.")
-        try:
-            consumer = get_kafka_data(self.kafka_topic, f"{self.strategy_name}{self.symbol}-monitor")
-            trading_client = trading_clickhouse_client()
-            portfolio_monitoring(self.stop_event, self.frequency, self.symbol, self.strategy_name, consumer, trading_client)
-        except Exception:
-            logger.exception(f"Error beginning portfolio monitoring for {self.symbol}, {self.strategy_name}.")
-
-    def start_signal_engine(self):
-        logger.info(f"Beginning signal generation for {self.symbol}, {self.strategy_name}.")
-        try:
-            consumer = get_kafka_data(self.kafka_topic, f"{self.strategy_name}{self.symbol}-signals")
-            market_client = market_clickhouse_client()
-            trading_client = trading_clickhouse_client()
-            generate_signals(self.stop_event, market_client, consumer, trading_client, self.strategy_name, self.symbol)
-        except Exception:
-            logger.exception(f"Error beginning signal generation for {self.symbol}, {self.strategy_name}.")
-
-    def run_strategy(self):
-        logger.info(f"Running strategy for {self.symbol}, {self.strategy_name}.")
-        try:
-            t1 = threading.Thread(target=self.start_portfolio_monitoring, daemon=True)
-            t2 = threading.Thread(target=self.start_signal_engine, daemon=True)
-            t1.start()
-            t2.start()
-        except Exception:
-            logger.exception(f"Error running strategy for {self.symbol}, {self.strategy_name}.")
+def mean_reversion_v3(market_data_client, consumer):
+    time.sleep(60)
+    recent_avg_df = market_data_client.query_df(
+        "SELECT AVG(price) AS recent_avg "
+        "FROM (SELECT price FROM ticks_db ORDER BY timestamp DESC LIMIT 10000) sub"
+    )
+    recent_avg_price = recent_avg_df.values[0][0]
+    model_price = get_latest_price(consumer)
+    qty = 1
+    if model_price > recent_avg_price:
+        decision = "SELL"
+    elif model_price < recent_avg_price:
+        decision = "BUY"
+    else:
+        decision = "HOLD"
+    return decision, model_price, qty
 
 
+def get_strategies(stop_event):
+    return [
+        StrategyTemplate(
+            stop_event=stop_event,
+            kafka_topic="price_ticks",
+            symbol="ETH",
+            strategy_name="MeanReversion_v1",
+            starting_cash=100000,
+            starting_mv=100000,
+            monitor_frequency=MONITOR_FREQUENCY,
+            strategy_function=mean_reversion_v1,
+            strategy_description="Every 60 seconds, look at the last 1000 ticks, and sell if overbought and buy if oversold."
+            ),
+        StrategyTemplate(
+            stop_event=stop_event,
+            kafka_topic="price_ticks",
+            symbol="ETH",
+            strategy_name="MeanReversion_v2",
+            starting_cash=100000,
+            starting_mv=100000,
+            monitor_frequency=MONITOR_FREQUENCY,
+            strategy_function=mean_reversion_v2,
+            strategy_description="Every 60 seconds, look at the last 5000 ticks, and sell if overbought and buy if oversold."
+            ),
+        StrategyTemplate(
+            stop_event=stop_event,
+            kafka_topic="price_ticks",
+            symbol="ETH",
+            strategy_name="MeanReversion_v3",
+            starting_cash=100000,
+            starting_mv=100000,
+            monitor_frequency=MONITOR_FREQUENCY,
+            strategy_function=mean_reversion_v3,
+            strategy_description="Every 60 seconds, look at the last 10000 ticks, and sell if overbought and buy if oversold."
+            )
+        ]

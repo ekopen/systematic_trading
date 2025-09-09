@@ -21,7 +21,8 @@ def create_portfolio_table_key(client):
             quantity Float64,
             market_value Float64,
             portfolio_value Float64,
-            strategy_name String
+            strategy_name String,
+            strategy_description String
         ) ENGINE = MergeTree()
         ORDER BY (strategy_name, symbol)
     """)
@@ -44,7 +45,7 @@ def create_portfolio_table_timeseries(client):
     """)
     logger.info("Portfolio table time series created in ClickHouse.")
 
-def initialize_portfolio(client, starting_cash, symbol, starting_market_value, strategy_name, initialization_price):
+def initialize_portfolio(client, starting_cash, symbol, starting_market_value, strategy_name, initialization_price, strategy_description):
     logger.info("Initializing portfolio with starting cash and market value.")
     try:
         init_arr = [
@@ -54,8 +55,9 @@ def initialize_portfolio(client, starting_cash, symbol, starting_market_value, s
             starting_market_value,
             starting_cash + starting_market_value,
             strategy_name,
+            strategy_description
         ]
-        column_names = ["cash_balance", "symbol", "quantity", "market_value", "portfolio_value", "strategy_name"]
+        column_names = ["cash_balance", "symbol", "quantity", "market_value", "portfolio_value", "strategy_name", "strategy_description"]
         client.insert("portfolio_db_key", [init_arr], column_names)
         logger.info("Portfolio initialized with starting values.")
     except Exception:

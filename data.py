@@ -38,7 +38,7 @@ def get_kafka_data(kafka_topic, group_id):
     return consumer
 # return latest message from the consumer (this should be optimized to "hang")
 def get_latest_price(consumer):
-    consumer.poll(timeout_ms=0)
+    consumer.poll(timeout_ms=100)
     try:
         for tp in consumer.assignment():
             consumer.seek_to_end(tp)

@@ -3,13 +3,10 @@
 
 # imports
 import threading, time, signal, logging
-from data import market_clickhouse_client, trading_clickhouse_client, get_kafka_data, get_latest_price
-from portfolio import  delete_portfolio_tables, initialize_portfolio, create_portfolio_table_key, create_portfolio_table_timeseries, portfolio_monitoring
+from data import trading_clickhouse_client
+from portfolio import  delete_portfolio_tables, create_portfolio_table_key, create_portfolio_table_timeseries
 from execution import delete_execution_table, create_execution_table
-from signals import generate_signals
-from config import MONITOR_FREQUENCY
-
-from strategies import StrategyTemplate
+from strategies import get_strategies
 
 # logging 
 logging.basicConfig(
@@ -30,16 +27,7 @@ def handle_signal(signum, frame):
 signal.signal(signal.SIGTERM, handle_signal)
 signal.signal(signal.SIGINT, handle_signal) # CTRL+C shutdown
 
-
-test_strategy = StrategyTemplate(stop_event,
-                                 kafka_topic = "price_ticks", symbol="ETH", strategy_name="MeanReversion",
-                                 starting_cash=100000, starting_mv=100000, frequency=MONITOR_FREQUENCY)
-
-test_strategy_v2 = StrategyTemplate(stop_event,
-                                 kafka_topic = "price_ticks", symbol="ETH", strategy_name="MeanReversion_v2",
-                                 starting_cash=10000, starting_mv=10000, frequency=MONITOR_FREQUENCY)
-
-strat_arr = [test_strategy, test_strategy_v2]
+strategy_arr = get_strategies(stop_event)
 
 # start/stop loop
 if __name__ == "__main__":
@@ -54,13 +42,17 @@ if __name__ == "__main__":
         delete_execution_table(setup_client)
         create_execution_table(setup_client)
 
-        for strat in strat_arr:
+        all_threads = []
+        for strat in strategy_arr:
             strat.initialize_pf()
-            strat.run_strategy()
+            all_threads.extend(strat.run_strategy())
 
         while not stop_event.is_set():
              time.sleep(1)
 
+        logger.info("Stop event set. Waiting for threads to finish...")
+        for t in all_threads:
+            t.join()
         logger.info("System shutdown complete.") 
 
     except KeyboardInterrupt:
