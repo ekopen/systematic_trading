@@ -60,7 +60,7 @@ if __name__ == "__main__":
         # initialize starting portfolio
         init_consumer = get_kafka_data(kafka_topic)
         initialization_price = get_latest_price(init_consumer)
-        initialize_portfolio(setup_client, 100000, "ETH", 100000, ["MeanReversion"], initialization_price)
+        initialize_portfolio(setup_client, starting_cash=10000, symbol=symbol, starting_market_value=100000, strategy_names=[strategy_name], initialization_price=initialization_price)
         init_consumer.close()
 
         # start frequent portfolio monitoring and signal generation via threads

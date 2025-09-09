@@ -5,6 +5,7 @@ import logging, time
 logger = logging.getLogger(__name__)
 from portfolio import portfolio_key_order_update
 from data import get_latest_price
+from risk import run_risk_checks
 
 def delete_execution_table(client):
     logger.info("Deleting execution table if exists.")
@@ -49,9 +50,14 @@ def execute_trade(client, consumer, signal, model_price, qty, strategy_name, sym
         if signal == "HOLD":
             direction = 0
 
-        # approval logic
-        approval_status = "N"
-        approval_comment = "Approved"
+        # check risks of trade
+        passed, failures = run_risk_checks(client, symbol, qty, direction, model_price, strategy_name)
+        if passed:
+            approval_status = "Y"
+            approval_comment = "Approved"
+        else:
+            approval_status = "N"
+            approval_comment = "; ".join(failures)
 
         if approval_status == "Y":
             # in a real system, this is where the order would be routed to the exchange/broker. to simulate real conditions, we just wait a second and get the latest price again
@@ -62,6 +68,7 @@ def execute_trade(client, consumer, signal, model_price, qty, strategy_name, sym
             logger.info(f"Trade executed and recorded. Signal: {signal}, Model Price: {model_price}, Execution Price: {execution_price}, Quantity: {qty}, Strategy: {strategy_name}, Symbol: {symbol}")
         if approval_status == "N":
             update_execution(client, symbol, qty * direction, model_price, None, strategy_name, approval_status, approval_comment)
-            logger.info(f"Trade not approved. Signal: {signal}, Model Price: {model_price}, Quantity: {qty}, Strategy: {strategy_name}, Symbol: {symbol}")
+            logger.warning(f"Trade not approved. Signal: {signal}, Model Price: {model_price}, Quantity: {qty}, Strategy: {strategy_name}, Symbol: {symbol}")
+            
     except Exception:
         logger.exception("Error executing trade")

@@ -47,7 +47,7 @@ def generate_signals(stop_event, market_data_client, consumer, trading_data_clie
                     logger.exception("Error sending signal to execution engine.")
 
                 logger.info("Waiting for next signal generation.")
-                time.sleep(20)
+                time.sleep(10)
 
             except Exception:
                 logger.exception("Error in signal generator loop")
