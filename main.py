@@ -9,6 +9,8 @@ from execution import delete_execution_table, create_execution_table
 from signals import generate_signals
 from config import MONITOR_FREQUENCY
 
+from strategies import StrategyTemplate
+
 # logging 
 logging.basicConfig(
     level=logging.INFO,
@@ -28,21 +30,16 @@ def handle_signal(signum, frame):
 signal.signal(signal.SIGTERM, handle_signal)
 signal.signal(signal.SIGINT, handle_signal) # CTRL+C shutdown
 
-# subscribing to a specific kafka topic
-kafka_topic = "price_ticks"
-symbol = "ETH"
-strategy_name = "MeanReversion"
 
-# logic for portfolio monitoring and signal engine threads, which need their own clients and consumers
-def start_portfolio_monitoring(stop_event, frequency, symbol, strategy_name, kafka_topic):
-    client = trading_clickhouse_client()
-    consumer = get_kafka_data(kafka_topic)
-    portfolio_monitoring(stop_event, frequency, symbol, strategy_name, consumer, client)
-def start_signal_engine(stop_event, kafka_topic):
-    market_client = market_clickhouse_client()
-    trading_client = trading_clickhouse_client()
-    consumer = get_kafka_data(kafka_topic)
-    generate_signals(stop_event, market_client, consumer, trading_client)
+test_strategy = StrategyTemplate(stop_event,
+                                 kafka_topic = "price_ticks", symbol="ETH", strategy_name="MeanReversion",
+                                 starting_cash=100000, starting_mv=100000, frequency=MONITOR_FREQUENCY)
+
+test_strategy_v2 = StrategyTemplate(stop_event,
+                                 kafka_topic = "price_ticks", symbol="ETH", strategy_name="MeanReversion_v2",
+                                 starting_cash=10000, starting_mv=10000, frequency=MONITOR_FREQUENCY)
+
+strat_arr = [test_strategy, test_strategy_v2]
 
 # start/stop loop
 if __name__ == "__main__":
@@ -57,17 +54,9 @@ if __name__ == "__main__":
         delete_execution_table(setup_client)
         create_execution_table(setup_client)
 
-        # initialize starting portfolio
-        init_consumer = get_kafka_data(kafka_topic)
-        initialization_price = get_latest_price(init_consumer)
-        initialize_portfolio(setup_client, starting_cash=10000, symbol=symbol, starting_market_value=100000, strategy_names=[strategy_name], initialization_price=initialization_price)
-        init_consumer.close()
-
-        # start frequent portfolio monitoring and signal generation via threads
-        t1 = threading.Thread(target=start_portfolio_monitoring, args=(stop_event, MONITOR_FREQUENCY, symbol, strategy_name, kafka_topic))
-        t2 = threading.Thread(target=start_signal_engine, args=(stop_event, kafka_topic))
-        t1.start()
-        t2.start()
+        for strat in strat_arr:
+            strat.initialize_pf()
+            strat.run_strategy()
 
         while not stop_event.is_set():
              time.sleep(1)
@@ -77,6 +66,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logger.info("KeyboardInterrupt received. Shutting down...")
         stop_event.set()
-    except Exception as e:
+    except Exception:
         logger.exception("Fatal error in main loop")
         

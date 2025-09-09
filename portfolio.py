@@ -44,7 +44,7 @@ def create_portfolio_table_timeseries(client):
     """)
     logger.info("Portfolio table time series created in ClickHouse.")
 
-def initialize_portfolio(client, starting_cash, symbol, starting_market_value, strategy_names, initialization_price):
+def initialize_portfolio(client, starting_cash, symbol, starting_market_value, strategy_name, initialization_price):
     logger.info("Initializing portfolio with starting cash and market value.")
     try:
         init_arr = [
@@ -53,7 +53,7 @@ def initialize_portfolio(client, starting_cash, symbol, starting_market_value, s
             starting_market_value / initialization_price,
             starting_market_value,
             starting_cash + starting_market_value,
-            strategy_names[0],
+            strategy_name,
         ]
         column_names = ["cash_balance", "symbol", "quantity", "market_value", "portfolio_value", "strategy_name"]
         client.insert("portfolio_db_key", [init_arr], column_names)

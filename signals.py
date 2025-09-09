@@ -7,7 +7,7 @@ from data import get_latest_price
 logger = logging.getLogger(__name__)
 
 # begins generating signals for the execution engine
-def generate_signals(stop_event, market_data_client, consumer, trading_data_client):
+def generate_signals(stop_event, market_data_client, consumer, trading_data_client, strategy_name, symbol):
 
     logger.info("Signal generator started.")
 
@@ -27,13 +27,14 @@ def generate_signals(stop_event, market_data_client, consumer, trading_data_clie
                 logger.info(f"Latest price: {model_price}")
 
                 qty = 1
-                strategy_name = "MeanReversion"
-                symbol = "ETH"
+
                 # buy if price above avg, sell if below
                 if model_price > recent_avg_price:
                     decision= "SELL"
                 if model_price < recent_avg_price:
                     decision= "BUY"
+                else:
+                    decision= "HOLD"
 
                 logger.info("Signal has been generated.")
                 
