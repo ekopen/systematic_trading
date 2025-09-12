@@ -113,3 +113,29 @@ def portfolio_monitoring(stop_event, frequency, symbol, strategy_name, consumer,
             consumer.close()
         except Exception:
             logger.exception("Error during portfolio monitoring shutdown.")
+
+def get_cash_balance(client, strategy_name, symbol):
+    logger.info("Checking cash balance for trade.")
+    try:
+        rows = client.query(f"""
+            SELECT cash_balance 
+            FROM portfolio_db_key 
+            WHERE strategy_name = '{strategy_name}' AND symbol = '{symbol}'
+        """).result_rows
+        cash_balance = rows[0][0]
+        return cash_balance
+    except Exception:
+        logger.exception("Error retrieving cash balance")
+
+def get_qty_balance(client, strategy_name, symbol):
+    logger.info("Checking quantity balance for trade.")
+    try:
+        rows = client.query(f"""
+            SELECT quantity 
+            FROM portfolio_db_key 
+            WHERE strategy_name = '{strategy_name}' AND symbol = '{symbol}'
+        """).result_rows
+        quantity = rows[0][0]
+        return quantity
+    except Exception:
+        logger.exception("Error retrieving quantity balance")

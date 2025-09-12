@@ -3,6 +3,7 @@
 
 import logging
 from config import MAX_DRAWDOWN, MAX_ALLOCATION
+from portfolio import get_cash_balance, get_qty_balance
 logger = logging.getLogger(__name__)
 
 def check_position_size(client, symbol, qty, price, strategy_name, max_allocation=MAX_ALLOCATION):
@@ -28,12 +29,7 @@ def check_position_size(client, symbol, qty, price, strategy_name, max_allocatio
 def check_cash_balance(client, qty, direction, price, strategy_name, symbol):
     logger.info("Checking cash balance for trade.")
     try:
-        rows = client.query(f"""
-            SELECT cash_balance 
-            FROM portfolio_db_key 
-            WHERE strategy_name = '{strategy_name}' AND symbol = '{symbol}'
-        """).result_rows
-        cash_balance = rows[0][0]
+        cash_balance = get_cash_balance(client, strategy_name, symbol)
         trade_cost = qty * price * direction
         if trade_cost > cash_balance:
             msg = f"Not enough cash. Needed {trade_cost:.2f}, available {cash_balance:.2f}"
@@ -43,6 +39,20 @@ def check_cash_balance(client, qty, direction, price, strategy_name, symbol):
         logger.exception("Error checking cash balance.")
         return False, "Error in cash balance check"
     return True, "Cash balance ok"
+
+def check_qty_balance(client, qty, direction, strategy_name, symbol):
+    logger.info("Checking quantity balance for trade.")
+    try:
+        quantity = get_qty_balance(client, strategy_name, symbol)
+        traded_qty = qty * direction
+        if -traded_qty > quantity:
+            msg = f"Not enough quantity. Needed {-traded_qty:.2f}, available {quantity:.2f}"
+            logger.warning(msg)
+            return False, msg
+    except Exception:
+        logger.exception("Error checking quantity balance.")
+        return False, "Error in quantity balance check"
+    return True, "Quantity balance ok"
 
 
 def check_max_drawdown(client, strategy_name, symbol, max_drawdown=MAX_DRAWDOWN):
@@ -82,6 +92,8 @@ def run_risk_checks(client, symbol, qty, direction, model_price, strategy_name):
         check_position_size(client, symbol, qty, model_price, strategy_name),
         check_cash_balance(client, qty, direction,
          model_price, strategy_name, symbol),
+        check_qty_balance(client, qty, direction,
+         strategy_name, symbol),
         check_max_drawdown(client, strategy_name, symbol)
     ]
 

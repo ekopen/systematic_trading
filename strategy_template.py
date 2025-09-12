@@ -53,8 +53,10 @@ class StrategyTemplate:
     def run_strategy(self):
         logger.info(f"Running strategy for {self.symbol}, {self.strategy_name}.")
         try:
-            t1 = threading.Thread(target=self.start_portfolio_monitoring, daemon=True)
-            t2 = threading.Thread(target=self.start_signal_engine, daemon=True)
+            t1 = threading.Thread(target=self.start_portfolio_monitoring)
+            t2 = threading.Thread(target=self.start_signal_engine)
+            # t1 = threading.Thread(target=self.start_portfolio_monitoring, daemon=True)
+            # t2 = threading.Thread(target=self.start_signal_engine, daemon=True)
             t1.start()
             t2.start()
             return [t1, t2]

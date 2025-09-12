@@ -18,6 +18,7 @@ def create_execution_table(client):
         CREATE TABLE IF NOT EXISTS execution_db (
             time DateTime DEFAULT now(),
             symbol String,
+            execution_logic String,
             quantity Float64,
             model_price Float64,
             executed_price Nullable(Float64),
@@ -30,24 +31,24 @@ def create_execution_table(client):
     """)
     logger.info("Execution table created in ClickHouse.")
 
-def update_execution(client, symbol, quantity, model_price, execution_price, strategy_name, approval_status, approval_comment):
+def update_execution(client, symbol, execution_logic, quantity, model_price, execution_price, strategy_name, approval_status, approval_comment):
     logger.info("Updating execution record in execution table.")
     try:
-        arr = [symbol, quantity, model_price, execution_price, strategy_name, approval_status, approval_comment]
-        column_names = ["symbol", "quantity", "model_price","executed_price", "strategy_name", "approval_status", "approval_comment"]
+        arr = [symbol, execution_logic, quantity, model_price, execution_price, strategy_name, approval_status, approval_comment]
+        column_names = ["symbol", "execution_logic", "quantity", "model_price","executed_price", "strategy_name", "approval_status", "approval_comment"]
         client.insert("execution_db", [arr], column_names)
         logger.info("Execution record updated in execution table.")
     except Exception:
         logger.exception("Error inserting updating execution records")
 
-def execute_trade(client, consumer, signal, model_price, qty, strategy_name, symbol):
+def execute_trade(client, consumer, signal, model_price, qty, strategy_name, symbol, execution_logic):
     logger.info("Executing trade based on signal.")
     try:
         if signal == "BUY":
             direction = 1
-        if signal == "SELL":
+        elif signal == "SELL":
             direction = -1
-        if signal == "HOLD":
+        else:
             direction = 0
 
         # check risks of trade
@@ -64,10 +65,10 @@ def execute_trade(client, consumer, signal, model_price, qty, strategy_name, sym
             time.sleep(1)
             execution_price = get_latest_price(consumer)
             portfolio_key_order_update(client, symbol, qty * direction, qty * direction * execution_price , strategy_name)
-            update_execution(client, symbol, qty * direction, model_price, execution_price, strategy_name, approval_status, approval_comment)
+            update_execution(client, symbol, execution_logic, qty * direction, model_price, execution_price, strategy_name, approval_status, approval_comment)
             logger.info(f"Trade executed and recorded. Signal: {signal}, Model Price: {model_price}, Execution Price: {execution_price}, Quantity: {qty}, Strategy: {strategy_name}, Symbol: {symbol}")
         if approval_status == "N":
-            update_execution(client, symbol, qty * direction, model_price, None, strategy_name, approval_status, approval_comment)
+            update_execution(client, symbol, execution_logic, qty * direction, model_price, None, strategy_name, approval_status, approval_comment)
             logger.warning(f"Trade not approved. Signal: {signal}, Model Price: {model_price}, Quantity: {qty}, Strategy: {strategy_name}, Symbol: {symbol}")
             
     except Exception:

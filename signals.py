@@ -14,11 +14,11 @@ def generate_signals(stop_event, market_data_client, consumer, trading_data_clie
         while not stop_event.is_set():
             try:
                 logger.info(f"Waiting for next signal generation for {symbol}, {strategy_name}.")
-                decision, model_price, qty = strategy_function(market_data_client, consumer)
+                decision, model_price, qty, execution_logic = strategy_function(market_data_client, consumer, trading_data_client, strategy_name, symbol, stop_event)
                 logger.info(f"Signal generated for {symbol}, {strategy_name}.")
                 try:
                     logger.info("Sending signal to execution engine.")
-                    execute_trade(trading_data_client, consumer, decision, model_price, qty, strategy_name, symbol)
+                    execute_trade(trading_data_client, consumer, decision, model_price, qty, strategy_name, symbol, execution_logic)
                     logger.info("Sent signal to execution engine.")
 
                 except Exception:
