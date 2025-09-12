@@ -89,8 +89,6 @@ def mean_reversion(market_data_client, consumer, trading_data_client, strategy_n
             f"Average price over 30 min: {recent_avg_price:.2f} "
             f"Standard deviation: {std_dev:.2f}.\n"
             f"Current price: {current_price:.2f}, z-score: {z_score:.2f}.\n"
-            f"Current cash balance: {cash_balance:,.2f}, atempting an execution "
-            f"of a quantity of {qty:.6f} valued at ${(qty * current_price):,.2f}."
         )
 
         return decision, current_price, qty, execution_logic
@@ -144,7 +142,7 @@ def breakout_strategy(market_data_client, consumer, trading_data_client, strateg
         execution_logic = (
             f"{decision} signal generated.\n"
             f"Recent High: {recent_high:.2f}, Recent Low: {recent_low:.2f}\n"
-            f"Current price: {current_price:.2f}, quantity: {qty:.6f}"
+            f"Current price: {current_price:.2f}."
         )
 
         return decision, current_price, qty, execution_logic
@@ -198,7 +196,7 @@ def sma_crossover(market_data_client, consumer, trading_data_client, strategy_na
         execution_logic = (
             f"{decision} signal generated.\n"
             f"Short SMA (20): {short_sma:.2f}, Long SMA (60): {long_sma:.2f}\n"
-            f"Current price: {current_price:.2f}, quantity: {qty:.6f}"
+            f"Current price: {current_price:.2f}."
         )
 
         return decision, current_price, qty, execution_logic
@@ -256,7 +254,6 @@ def rsi_reversal(market_data_client, consumer, trading_data_client, strategy_nam
         execution_logic = (
             f"{decision} signal generated.\n"
             f"RSI: {rsi:.2f}, Current price: {current_price:.2f}\n"
-            f"Attempting execution of {qty:.6f} units."
         )
 
         return decision, current_price, qty, execution_logic
