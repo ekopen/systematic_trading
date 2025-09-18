@@ -23,9 +23,9 @@ class StrategyTemplate:
     def initialize_pf(self):
         logger.info(f"Initializing portfolio for {self.symbol}, {self.strategy_name}.")
         try:
+            trading_client = trading_clickhouse_client()
             init_consumer = get_kafka_data(self.kafka_topic, f"{self.strategy_name}{self.symbol}-init")
             initialization_price = get_latest_price(init_consumer)
-            trading_client = trading_clickhouse_client()
             initialize_portfolio(trading_client, self.starting_cash, self.symbol, self.starting_mv, self.strategy_name, initialization_price, self.strategy_description)
             init_consumer.close()
         except Exception:
@@ -53,10 +53,8 @@ class StrategyTemplate:
     def run_strategy(self):
         logger.info(f"Running strategy for {self.symbol}, {self.strategy_name}.")
         try:
-            t1 = threading.Thread(target=self.start_portfolio_monitoring)
-            t2 = threading.Thread(target=self.start_signal_engine)
-            # t1 = threading.Thread(target=self.start_portfolio_monitoring, daemon=True)
-            # t2 = threading.Thread(target=self.start_signal_engine, daemon=True)
+            t1 = threading.Thread(target=self.start_portfolio_monitoring, daemon=True)
+            t2 = threading.Thread(target=self.start_signal_engine, daemon=True)
             t1.start()
             t2.start()
             return [t1, t2]

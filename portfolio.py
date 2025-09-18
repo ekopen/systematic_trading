@@ -23,7 +23,7 @@ def create_portfolio_table_key(client):
             portfolio_value Float64,
             strategy_name String,
             strategy_description String
-        ) ENGINE = MergeTree()
+        ) ENGINE = ReplacingMergeTree()
         ORDER BY (strategy_name, symbol)
     """)
     logger.info("Portfolio table key created in ClickHouse.")
@@ -41,24 +41,21 @@ def create_portfolio_table_timeseries(client):
             strategy_name String
         ) ENGINE = MergeTree()
         ORDER BY (strategy_name, symbol, time)
-        TTL time + INTERVAL 1 DAY
+        PRIMARY KEY (strategy_name, symbol)
     """)
     logger.info("Portfolio table time series created in ClickHouse.")
 
 def initialize_portfolio(client, starting_cash, symbol, starting_market_value, strategy_name, initialization_price, strategy_description):
     logger.info("Initializing portfolio with starting cash and market value.")
     try:
-        init_arr = [
-            starting_cash,
-            symbol,
-            starting_market_value / initialization_price,
-            starting_market_value,
-            starting_cash + starting_market_value,
-            strategy_name,
-            strategy_description
-        ]
-        column_names = ["cash_balance", "symbol", "quantity", "market_value", "portfolio_value", "strategy_name", "strategy_description"]
-        client.insert("portfolio_db_key", [init_arr], column_names)
+        client.command(f"""
+        INSERT INTO portfolio_db_key (cash_balance, symbol, quantity, market_value, portfolio_value, strategy_name, strategy_description)
+        SELECT {starting_cash}, '{symbol}', {starting_market_value / initialization_price}, {starting_market_value},
+            {starting_cash + starting_market_value}, '{strategy_name}', '{strategy_description}'
+        WHERE NOT EXISTS (
+            SELECT 1 FROM portfolio_db_key WHERE symbol = '{symbol}' AND strategy_name = '{strategy_name}'
+        )
+        """)
         logger.info("Portfolio initialized with starting values.")
     except Exception:
         logger.exception("Error initializing portfolio in ClickHouse.")

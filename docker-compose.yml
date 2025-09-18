@@ -21,21 +21,21 @@ services:
       timeout: 5s
       retries: 10
 
-# ----------- main pipeline ----------------#
-  # pipeline:
-  #   build: .
-  #   container_name: pipeline
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "8001:8001"
-  #   depends_on:
-  #     clickhouse:
-  #       condition: service_healthy
-  #   volumes:
-  #     - ./log_data:/app/log_data
-  #   restart: unless-stopped
-  #   stop_grace_period: 5s
+# ----------- main_app ----------------#
+  main_app:
+    build: .
+    container_name: main_app
+    # env_file:
+    #   - .env
+    ports:
+      - "8001:8001"
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    volumes:
+      - ./log_data:/app/log_data
+    restart: unless-stopped
+    stop_grace_period: 5s
 
   grafana:
     image: grafana/grafana:latest
@@ -62,6 +62,45 @@ services:
       - ./dashboards:/var/lib/grafana/dashboards
     restart: unless-stopped
 
+# ----------- monitoring ----------------#
+
+  # tracks host level metrics
+  # http://159.65.41.22:9100/metrics
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+    restart: unless-stopped    
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+  # scrapes endpoints for metrics/alerts. the central "brain"
+  # http://159.65.41.22:9090/targets
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:                          
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=2d" # keep data for 2 days
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+
 volumes:
   clickhouse_data:
   grafana-data:
+  prometheus-data:

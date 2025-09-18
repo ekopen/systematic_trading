@@ -59,16 +59,19 @@ def execute_trade(client, consumer, signal, model_price, qty, strategy_name, sym
         else:
             approval_status = "N"
             approval_comment = "; ".join(failures)
-
+            
+        quantity_change = qty * direction
         if approval_status == "Y":
             # in a real system, this is where the order would be routed to the exchange/broker. to simulate real conditions, we just wait a second and get the latest price again
             time.sleep(1)
             execution_price = get_latest_price(consumer)
-            portfolio_key_order_update(client, symbol, qty * direction, qty * direction * execution_price , strategy_name)
+            
+            market_value_change = qty * direction * execution_price
+            portfolio_key_order_update(client, symbol, quantity_change, market_value_change , strategy_name)
             update_execution(client, symbol, execution_logic, qty * direction, model_price, execution_price, strategy_name, approval_status, approval_comment)
             logger.info(f"Trade executed and recorded. Signal: {signal}, Model Price: {model_price}, Execution Price: {execution_price}, Quantity: {qty}, Strategy: {strategy_name}, Symbol: {symbol}")
         if approval_status == "N":
-            update_execution(client, symbol, execution_logic, qty * direction, model_price, None, strategy_name, approval_status, approval_comment)
+            update_execution(client, symbol, execution_logic, quantity_change, model_price, None, strategy_name, approval_status, approval_comment)
             logger.warning(f"Trade not approved. Signal: {signal}, Model Price: {model_price}, Quantity: {qty}, Strategy: {strategy_name}, Symbol: {symbol}")
             
     except Exception:

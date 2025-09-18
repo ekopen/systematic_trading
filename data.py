@@ -3,13 +3,14 @@
 
 import clickhouse_connect
 from kafka import KafkaConsumer
+from config import market_data_clickhouse_ip, kafka_ip
 import logging, json
 logger = logging.getLogger(__name__)
 
 # historical market data
 def market_clickhouse_client():      
     client = clickhouse_connect.get_client(
-        host="159.65.41.22",
+        host=market_data_clickhouse_ip,
         port=8123,
         username="default",   
         password="mysecurepassword",
@@ -19,8 +20,8 @@ def market_clickhouse_client():
 # portfolio data
 def trading_clickhouse_client():
     return clickhouse_connect.get_client(
-        # host="clickhouse",
-        host="localhost",
+        host="clickhouse",
+        # host="localhost",
         port=8123,
         username="default",
         password="mysecurepassword",
@@ -30,9 +31,9 @@ def trading_clickhouse_client():
 def get_kafka_data(kafka_topic, group_id):
     consumer = KafkaConsumer(
         kafka_topic,
-        bootstrap_servers=["159.65.41.22:9092"],
+        bootstrap_servers=[kafka_ip],
         auto_offset_reset="latest",   
-        enable_auto_commit=False,
+        enable_auto_commit=False,   
         group_id=group_id,
     )
     return consumer
