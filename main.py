@@ -42,20 +42,9 @@ if __name__ == "__main__":
     try:
         logger.info("System starting.")
 
-        # setup portfolio and execution tables
-        setup_client = trading_clickhouse_client()
-
-        # delete_portfolio_tables(setup_client)
-        # delete_execution_table(setup_client)
-
-        create_portfolio_table_key(setup_client)
-        create_portfolio_table_timeseries(setup_client)
-        create_execution_table(setup_client)
-
         # start trading strategies
         all_threads = []
         for strat in strategy_arr:
-            strat.initialize_pf()
             all_threads.extend(strat.run_strategy())
 
         while not stop_event.is_set():

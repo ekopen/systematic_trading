@@ -21,21 +21,7 @@ services:
       timeout: 5s
       retries: 10
 
-# ----------- main_app ----------------#
-  main_app:
-    build: .
-    container_name: main_app
-    # env_file:
-    #   - .env
-    ports:
-      - "8001:8001"
-    depends_on:
-      clickhouse:
-        condition: service_healthy
-    volumes:
-      - ./log_data:/app/log_data
-    restart: unless-stopped
-    stop_grace_period: 5s
+
 
   grafana:
     image: grafana/grafana:latest
@@ -99,6 +85,30 @@ services:
         max-size: "50m"
         max-file: "3"
 
+# ----------- main_app ----------------#
+  main_app:
+    build: .
+    container_name: main_app
+    # env_file:
+    #   - .env
+    ports:
+      - "8001:8001"
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    volumes:
+      - ./log_data:/app/log_data
+    restart: unless-stopped
+    stop_grace_period: 5s
+
+# ----------- setup ----------------#
+  db_setup:
+    build: .
+    command: ["python", "init_db.py"]
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    profiles: ["setup"]
 
 volumes:
   clickhouse_data:
