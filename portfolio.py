@@ -73,43 +73,54 @@ def portfolio_key_order_update(client, symbol, quantity_change, market_value_cha
 
 def portfolio_monitoring(stop_event, frequency, symbol, strategy_name, consumer, client):
     logger.info("Starting portfolio monitoring thread.")
-    try:
-        while not stop_event.is_set():
-            # periodically update market value and portfolio value based on latest price of traded symbol
+    while not stop_event.is_set():
+        try:
             logger.info("Updating portfolio key table per regular monitoring.")
             price = get_latest_price(consumer)
+            if price is None:
+                logger.warning("No price received from Kafka. Skipping this update cycle.")
+                time.sleep(frequency)
+                continue
+
+            # Update key table
             client.command(f"""
-                ALTER TABLE portfolio_db_key UPDATE  market_value = quantity * {price}, portfolio_value = cash_balance + market_value
+                ALTER TABLE portfolio_db_key 
+                UPDATE market_value = quantity * {price}, 
+                       portfolio_value = cash_balance + market_value
                 WHERE symbol = '{symbol}' AND strategy_name = '{strategy_name}'
             """)
             logger.info("Updated portfolio key table per regular monitoring.")
 
-            # after each update, insert latest values into timeseries table
-            logger.info("Inserting latest portfolio key values into timeseries table.")
+            # Insert latest values into timeseries table
             rows = client.query(f"""
                 SELECT cash_balance, symbol, quantity, market_value, strategy_name, portfolio_value
                 FROM portfolio_db_key
                 WHERE symbol = '{symbol}' AND strategy_name = '{strategy_name}'
             """).result_rows
-            client.insert(
-                "portfolio_db_ts",
-                rows,
-                column_names=["cash_balance", "symbol", "quantity", "market_value", "strategy_name", "portfolio_value"]
+
+            if rows:
+                client.insert(
+                    "portfolio_db_ts",
+                    rows,
+                    column_names=[
+                        "cash_balance", "symbol", "quantity", "market_value", "strategy_name", "portfolio_value"
+                    ]
                 )
-            logger.info("Inserted latest portfolio key values into timeseries table.")
+                logger.info("Inserted latest portfolio key values into timeseries table.")
+            else:
+                logger.warning("No rows found in portfolio_db_key for this strategy. Skipping insert.")
 
-            # wait for next update
-            logger.info(f"Sleeping for {frequency} seconds before next portfolio monitoring update.")
-            time.sleep(frequency)
-    except Exception:
-        logger.exception("Error during portfolio monitoring loop.")
-
-    finally:
-        try:
-            logger.info("Portfolio monitoring shutting down.")
-            consumer.close()
         except Exception:
-            logger.exception("Error during portfolio monitoring shutdown.")
+            logger.exception("Error during portfolio monitoring iteration.")
+
+        logger.info(f"Sleeping for {frequency} seconds before next portfolio monitoring update.")
+        time.sleep(frequency)
+
+    try:
+        logger.info("Portfolio monitoring shutting down.")
+        consumer.close()
+    except Exception:
+        logger.exception("Error during portfolio monitoring shutdown.")
 
 def get_cash_balance(client, strategy_name, symbol):
     logger.info("Checking cash balance for trade.")

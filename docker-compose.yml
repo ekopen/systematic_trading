@@ -104,7 +104,7 @@ services:
 # ----------- setup ----------------#
   db_setup:
     build: .
-    command: ["python", "init_db.py"]
+    command: ["python", "setup.py"]
     depends_on:
       clickhouse:
         condition: service_healthy

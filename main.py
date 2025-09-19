@@ -4,8 +4,6 @@
 # imports
 import threading, time, signal, logging
 from data import trading_clickhouse_client
-from portfolio import  delete_portfolio_tables, create_portfolio_table_key, create_portfolio_table_timeseries
-from execution import delete_execution_table, create_execution_table
 from strategies import get_strategies
 
 # logging 
