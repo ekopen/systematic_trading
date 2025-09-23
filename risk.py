@@ -2,7 +2,7 @@
 # risk engine module, used to manage risk parameters and ensure trades are executed within defined risk limits
 
 import logging
-from config import MAX_DRAWDOWN, MAX_ALLOCATION
+from config import MAX_DRAWDOWN, MAX_ALLOCATION, MAX_SHORT
 from portfolio import get_cash_balance, get_qty_balance
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ def check_position_size(client, symbol, qty, price, strategy_name, max_allocatio
             WHERE strategy_name = '{strategy_name}' AND symbol = '{symbol}'
         """).result_rows
         portfolio_value = rows[0][0]
-        trade_value = qty * price
+        trade_value = abs(qty * price)
         if trade_value > max_allocation * portfolio_value:
             msg = f"Trade value {trade_value:.2f} exceeds max allocation {max_allocation*100:.1f}% of portfolio {portfolio_value:.2f}"
             logger.warning(msg)
@@ -31,7 +31,7 @@ def check_cash_balance(client, qty, direction, price, strategy_name, symbol):
     try:
         cash_balance = get_cash_balance(client, strategy_name, symbol)
         trade_cost = qty * price * direction
-        if trade_cost > cash_balance:
+        if direction == 1 and trade_cost > cash_balance:
             msg = f"Not enough cash. Needed {trade_cost:.2f}, available {cash_balance:.2f}"
             logger.warning(msg)
             return False, msg
@@ -40,13 +40,13 @@ def check_cash_balance(client, qty, direction, price, strategy_name, symbol):
         return False, "Error in cash balance check"
     return True, "Cash balance ok"
 
-def check_qty_balance(client, qty, direction, strategy_name, symbol):
+def check_qty_balance(client, qty, direction, price, strategy_name, symbol):
     logger.info("Checking quantity balance for trade.")
     try:
         quantity = get_qty_balance(client, strategy_name, symbol)
         traded_qty = qty * direction
-        if -traded_qty > quantity:
-            msg = f"Not enough quantity. Needed {-traded_qty:.2f}, available {quantity:.2f}"
+        if direction == -1 and ((quantity + traded_qty) * price) < -MAX_SHORT:
+            msg = f"Short position limit exceeded. Current {quantity}, attempted trade {traded_qty}"
             logger.warning(msg)
             return False, msg
     except Exception:
@@ -93,7 +93,7 @@ def run_risk_checks(client, symbol, qty, direction, model_price, strategy_name):
         check_cash_balance(client, qty, direction,
          model_price, strategy_name, symbol),
         check_qty_balance(client, qty, direction,
-         strategy_name, symbol),
+         model_price, strategy_name, symbol),
         check_max_drawdown(client, strategy_name, symbol)
     ]
 
