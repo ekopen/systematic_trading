@@ -3,7 +3,6 @@
 
 # imports
 import threading, time, signal, logging
-from data import trading_clickhouse_client
 from strategies import get_strategies
 
 # logging 

@@ -4,7 +4,7 @@
 # docker compose run --rm db_setup
 
 from data import trading_clickhouse_client
-from portfolio import create_portfolio_table_key, create_portfolio_table_timeseries, initialize_portfolio, delete_portfolio_tables
+from portfolio import create_portfolio_table_key, create_portfolio_table_timeseries, delete_portfolio_tables
 from execution import create_execution_table, delete_execution_table
 from strategies import get_strategies
 import logging
