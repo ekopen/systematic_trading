@@ -1,7 +1,6 @@
 # strategies.py
 # contains all strategy functions, and packages them so they can be sent to main.py
 
-
 import logging
 from data import get_latest_price
 from strategy_template import StrategyTemplate
@@ -11,11 +10,37 @@ logger = logging.getLogger(__name__)
 
 #ml imports
 import joblib
-import numpy as np
-import pandas as pd
 from portfolio import get_cash_balance
 from data import get_latest_price
-rf_model = joblib.load("models/rf_model.pkl")
+rf_model = joblib.load("models/random_forest_-_second_features.pkl")
+
+# this is found in the ml module
+def build_features(df):
+    # standard features
+    df["returns"] = df["price"].pct_change()
+    df["sma_30"] = df["price"].rolling(window=30).mean()
+    df["sma_60"] = df["price"].rolling(window=60).mean()
+    df["momentum_10"] = df["price"] / df["price"].shift(10) - 1
+    df["momentum_30"] = df["price"] / df["price"].shift(30) - 1
+    df["volatility_30"] = df["returns"].rolling(window=30).std()
+    for lag in [1, 2, 5]:
+        df[f"lag_return_{lag}"] = df["returns"].shift(lag)
+
+    # RSI
+    delta = df["price"].diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+    rs = gain / loss
+    df["14"] = 100 - (100 / (1 + rs))
+
+    # MACD
+    ema12 = df["price"].ewm(span=12, adjust=False).mean()
+    ema26 = df["price"].ewm(span=26, adjust=False).mean()
+    df["macd"] = ema12 - ema26
+    df["macd_signal"] = df["macd"].ewm(span=9, adjust=False).mean()
+    
+    df = df.dropna()
+    return df
 
 
 def ml_random_forest(market_data_client, consumer, trading_data_client, strategy_name, symbol, stop_event):
@@ -25,28 +50,23 @@ def ml_random_forest(market_data_client, consumer, trading_data_client, strategy
     Labels: 0 = SELL, 1 = HOLD, 2 = BUY
     """
     try:
-        if stop_event.wait(60):
+        if stop_event.wait(15):
             return None, None, None, None
 
         # Get recent historical data (same as feature engineering during training)
+        # 120 rows to get all features populated
         df = market_data_client.query_df("""
-            SELECT avg(price) AS price
+            SELECT 
+                toStartOfInterval(timestamp, INTERVAL 15 SECOND) AS ts, 
+                avg(price) AS price
             FROM ticks_db
-            WHERE timestamp > now() - INTERVAL 2 HOUR
-            GROUP BY toStartOfMinute(timestamp)
-            ORDER BY toStartOfMinute(timestamp) DESC
+            GROUP BY ts
+            ORDER BY ts DESC
             LIMIT 120
         """)
         df = df.sort_index()
-
-        # Build features
-        df["returns"] = df["price"].pct_change()
-        df["sma_20"] = df["price"].rolling(20).mean()
-        df["sma_60"] = df["price"].rolling(60).mean()
-        df["volatility"] = df["returns"].rolling(30).std()
-        df = df.dropna()
-
-        latest_features = df[["returns", "sma_20", "sma_60", "volatility"]].iloc[-1].values.reshape(1, -1)
+        df = build_features(df)
+        latest_features = df.drop(columns=["price", "ts"]).iloc[-1].values.reshape(1, -1)
 
         # Model prediction
         prediction = rf_model.predict(latest_features)[0]
