@@ -1,6 +1,8 @@
 # config.py
 # variables that are used across the project
 import os
+from dotenv import load_dotenv
+load_dotenv() # for when running locally
 
 MONITOR_FREQUENCY = 60 # seconds per monitoring instance, where we record portfolio data
 MODEL_REFRESH_INTERVAL = 3600 # how often to refresh ml models, in seconds
