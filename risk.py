@@ -7,7 +7,6 @@ from portfolio import get_cash_balance, get_qty_balance
 logger = logging.getLogger(__name__)
 
 def check_position_size(client, symbol, qty, price, strategy_name, max_allocation=MAX_ALLOCATION):
-    logger.info("Checking position size for trade.")
     try:
         rows = client.query(f"""
             SELECT portfolio_value 
@@ -20,14 +19,13 @@ def check_position_size(client, symbol, qty, price, strategy_name, max_allocatio
             msg = f"Trade value {trade_value:.2f} exceeds max allocation {max_allocation*100:.1f}% of portfolio {portfolio_value:.2f}"
             logger.warning(msg)
             return False, msg
-    except Exception:
-        logger.exception("Error checking position size.")
+    except Exception as e:
+        logger.exception(f"Error checking position size: {e}")
         return False, "Error in position size check"
     return True, "Position size ok"
 
 
 def check_cash_balance(client, qty, direction, price, strategy_name, symbol):
-    logger.info("Checking cash balance for trade.")
     try:
         cash_balance = get_cash_balance(client, strategy_name, symbol)
         trade_cost = qty * price * direction
@@ -35,8 +33,8 @@ def check_cash_balance(client, qty, direction, price, strategy_name, symbol):
             msg = f"Not enough cash. Needed {trade_cost:.2f}, available {cash_balance:.2f}"
             logger.warning(msg)
             return False, msg
-    except Exception:
-        logger.exception("Error checking cash balance.")
+    except Exception as e:
+        logger.exception(f"Error checking cash balance: {e}")
         return False, "Error in cash balance check"
     return True, "Cash balance ok"
 
@@ -49,14 +47,13 @@ def check_qty_balance(client, qty, direction, price, strategy_name, symbol):
             msg = f"Short position limit exceeded. Current {quantity}, attempted trade {traded_qty}"
             logger.warning(msg)
             return False, msg
-    except Exception:
-        logger.exception("Error checking quantity balance.")
+    except Exception as e:
+        logger.exception(f"Error checking quantity balance :{e}")
         return False, "Error in quantity balance check"
     return True, "Quantity balance ok"
 
 
 def check_max_drawdown(client, strategy_name, symbol, max_drawdown=MAX_DRAWDOWN):
-    logger.info("Checking max drawdown for trade.")
     try:
         rows = client.query(f"""
             WITH
@@ -81,8 +78,8 @@ def check_max_drawdown(client, strategy_name, symbol, max_drawdown=MAX_DRAWDOWN)
                     msg = f"Max drawdown {drawdown:.2%} exceeded limit {max_drawdown:.0%}"
                     logger.warning(msg)
                     return False, msg
-    except Exception:
-        logger.exception("Error checking max drawdown.")
+    except Exception as e:
+        logger.exception(f"Error checking max drawdown: {e}")
         return False, "Error in drawdown check"
     return True, "Drawdown ok"
 

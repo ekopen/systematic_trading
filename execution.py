@@ -7,42 +7,15 @@ from portfolio import portfolio_key_order_update
 from data import get_latest_price
 from risk import run_risk_checks
 
-def delete_execution_table(client):
-    logger.info("Deleting execution table if exists.")
-    client.command("DROP TABLE IF EXISTS execution_db SYNC")
-    logger.info("Execution table deleted in ClickHouse.")
-
-def create_execution_table(client):
-    logger.info("Creating execution table if not exists.")
-    client.command("""
-        CREATE TABLE IF NOT EXISTS execution_db (
-            time DateTime DEFAULT now(),
-            symbol String,
-            execution_logic String,
-            quantity Float64,
-            model_price Float64,
-            executed_price Nullable(Float64),
-            strategy_name String,
-            approval_status String,
-            approval_comment String
-        ) ENGINE = MergeTree()
-        ORDER BY (strategy_name, symbol, time)
-        TTL time + INTERVAL 1 DAY
-    """)
-    logger.info("Execution table created in ClickHouse.")
-
 def update_execution(client, symbol, execution_logic, quantity, model_price, execution_price, strategy_name, approval_status, approval_comment):
-    logger.info("Updating execution record in execution table.")
     try:
         arr = [symbol, execution_logic, quantity, model_price, execution_price, strategy_name, approval_status, approval_comment]
         column_names = ["symbol", "execution_logic", "quantity", "model_price","executed_price", "strategy_name", "approval_status", "approval_comment"]
         client.insert("execution_db", [arr], column_names)
-        logger.info("Execution record updated in execution table.")
-    except Exception:
-        logger.exception("Error inserting updating execution records")
+    except Exception as e:
+        logger.exception(f"Error inserting updating execution records: {e}")
 
 def execute_trade(client, consumer, signal, model_price, qty, strategy_name, symbol, execution_logic):
-    logger.info("Executing trade based on signal.")
     try:
         if signal == "BUY":
             direction = 1
@@ -74,5 +47,5 @@ def execute_trade(client, consumer, signal, model_price, qty, strategy_name, sym
             update_execution(client, symbol, execution_logic, quantity_change, model_price, None, strategy_name, approval_status, approval_comment)
             logger.warning(f"Trade not approved. Signal: {signal}, Model Price: {model_price}, Quantity: {qty}, Strategy: {strategy_name}, Symbol: {symbol}")
             
-    except Exception:
-        logger.exception("Error executing trade")
+    except Exception as e:
+        logger.exception(f"Error executing trade: {e}")

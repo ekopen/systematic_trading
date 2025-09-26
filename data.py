@@ -1,22 +1,32 @@
 # data.py
-# Data pipeline module, used to get clickhouse data from the market data pipeline, create clickhouse clients for the portfolios, and get kafka data
+# used to get kafka data, clickhouse data, and connect to aws
 
+from config import MARKET_DATA_CLICKHOUSE_IP, KAFKA_IP, AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION, AWS_BUCKET
 import clickhouse_connect
 from kafka import KafkaConsumer
-from config import market_data_clickhouse_ip, kafka_ip
-import logging, json
+import logging, json, boto3
 logger = logging.getLogger(__name__)
+
+# aws connection
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_REGION,
+)
+bucket_name = AWS_BUCKET
 
 # historical market data
 def market_clickhouse_client():      
     client = clickhouse_connect.get_client(
-        host=market_data_clickhouse_ip,
+        host=MARKET_DATA_CLICKHOUSE_IP,
         port=8123,
         username="default",   
         password="mysecurepassword",
         database="default"
     )
     return client
+
 # portfolio data
 def trading_clickhouse_client():
     return clickhouse_connect.get_client(
@@ -27,16 +37,18 @@ def trading_clickhouse_client():
         password="mysecurepassword",
         database="default"
     )
+
 # real time market data
 def get_kafka_data(kafka_topic, group_id):
     consumer = KafkaConsumer(
         kafka_topic,
-        bootstrap_servers=[kafka_ip],
+        bootstrap_servers=[KAFKA_IP],
         auto_offset_reset="latest",   
         enable_auto_commit=False,   
         group_id=group_id,
     )
     return consumer
+
 # return latest message from the consumer (this should be optimized to "hang")
 def get_latest_price(consumer):
     consumer.poll(timeout_ms=100)

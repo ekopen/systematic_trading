@@ -28,8 +28,8 @@ class StrategyTemplate:
             initialization_price = get_latest_price(init_consumer)
             initialize_portfolio(trading_client, self.starting_cash, self.symbol, self.starting_mv, self.strategy_name, initialization_price, self.strategy_description)
             init_consumer.close()
-        except Exception:
-            logger.exception(f"Error initializing portfolio for {self.symbol}, {self.strategy_name}.")
+        except Exception as e:
+            logger.exception(f"Error initializing portfolio for {self.symbol}, {self.strategy_name}: {e}")
 
     def start_portfolio_monitoring(self):
         logger.info(f"Beginning portfolio monitoring for {self.symbol}, {self.strategy_name}.")
@@ -37,8 +37,8 @@ class StrategyTemplate:
             consumer = get_kafka_data(self.kafka_topic, f"{self.strategy_name}{self.symbol}-monitor")
             trading_client = trading_clickhouse_client()
             portfolio_monitoring(self.stop_event, self.monitor_frequency, self.symbol, self.strategy_name, consumer, trading_client)
-        except Exception:
-            logger.exception(f"Error beginning portfolio monitoring for {self.symbol}, {self.strategy_name}.")
+        except Exception as e:
+            logger.exception(f"Error beginning portfolio monitoring for {self.symbol}, {self.strategy_name}: {e}")
 
     def start_signal_engine(self):
         logger.info(f"Beginning signal generation for {self.symbol}, {self.strategy_name}.")
@@ -47,8 +47,8 @@ class StrategyTemplate:
             market_client = market_clickhouse_client()
             trading_client = trading_clickhouse_client()
             generate_signals(self.stop_event, market_client, consumer, trading_client, self.strategy_name, self.symbol, self.strategy_function)
-        except Exception:
-            logger.exception(f"Error beginning signal generation for {self.symbol}, {self.strategy_name}.")
+        except Exception as e:
+            logger.exception(f"Error beginning signal generation for {self.symbol}, {self.strategy_name}: {e}")
 
     def run_strategy(self):
         logger.info(f"Running strategy for {self.symbol}, {self.strategy_name}.")
@@ -58,6 +58,6 @@ class StrategyTemplate:
             t1.start()
             t2.start()
             return [t1, t2]
-        except Exception:
-            logger.exception(f"Error running strategy for {self.symbol}, {self.strategy_name}.")
+        except Exception as e:
+            logger.exception(f"Error running strategy for {self.symbol}, {self.strategy_name}: {e}")
             return []

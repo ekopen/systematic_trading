@@ -5,72 +5,28 @@ import logging
 from data import get_latest_price
 from strategy_template import StrategyTemplate
 from portfolio import get_cash_balance
+from ml_functions import get_production_data_seconds, build_features, get_ml_model
 from config import MONITOR_FREQUENCY
 logger = logging.getLogger(__name__)
 
-#ml imports
-import joblib
-from portfolio import get_cash_balance
-from data import get_latest_price
-rf_model = joblib.load("models/random_forest_-_second_features.pkl")
-
-# this is found in the ml module
-def build_features(df):
-    # standard features
-    df["returns"] = df["price"].pct_change()
-    df["sma_30"] = df["price"].rolling(window=30).mean()
-    df["sma_60"] = df["price"].rolling(window=60).mean()
-    df["momentum_10"] = df["price"] / df["price"].shift(10) - 1
-    df["momentum_30"] = df["price"] / df["price"].shift(30) - 1
-    df["volatility_30"] = df["returns"].rolling(window=30).std()
-    for lag in [1, 2, 5]:
-        df[f"lag_return_{lag}"] = df["returns"].shift(lag)
-
-    # RSI
-    delta = df["price"].diff()
-    gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
-    loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
-    rs = gain / loss
-    df["14"] = 100 - (100 / (1 + rs))
-
-    # MACD
-    ema12 = df["price"].ewm(span=12, adjust=False).mean()
-    ema26 = df["price"].ewm(span=26, adjust=False).mean()
-    df["macd"] = ema12 - ema26
-    df["macd_signal"] = df["macd"].ewm(span=9, adjust=False).mean()
-    
-    df = df.dropna()
-    return df
-
-
-def ml_random_forest(market_data_client, consumer, trading_data_client, strategy_name, symbol, stop_event):
-    """
-    ML-driven trading strategy using RandomForest predictions.
-    Features: returns, SMA20, SMA60, volatility.
-    Labels: 0 = SELL, 1 = HOLD, 2 = BUY
-    """
+def ml_random_forest_second_ticks(market_data_client, consumer, trading_data_client, strategy_name, symbol, stop_event):
     try:
+        # SET TRADE FREQUENCY
         if stop_event.wait(15):
             return None, None, None, None
 
-        # Get recent historical data (same as feature engineering during training)
-        # 120 rows to get all features populated
-        df = market_data_client.query_df("""
-            SELECT 
-                toStartOfInterval(timestamp, INTERVAL 15 SECOND) AS ts, 
-                avg(price) AS price
-            FROM ticks_db
-            GROUP BY ts
-            ORDER BY ts DESC
-            LIMIT 120
-        """)
-        df = df.sort_index()
-        df = build_features(df)
-        latest_features = df.drop(columns=["price", "ts"]).iloc[-1].values.reshape(1, -1)
+        # GET PRODUCTION DATA
+        prod_df = get_production_data_seconds(market_data_client)
+        feature_df = build_features(prod_df)
+        feature_df_clean = feature_df.drop(columns=["price", "ts"]).iloc[[-1]]
 
-        # Model prediction
-        prediction = rf_model.predict(latest_features)[0]
+        # GET MODEL
+        s3_key = "models/random_forest_-_second_features.pkl"
+        local_path = "models/random_forest_-_second_features.pkl"
+        ml_model = get_ml_model(s3_key, local_path)
 
+        # PREDICT FROM MODEL
+        prediction = ml_model.predict(feature_df_clean)[0]
         if prediction == 2:
             decision = "BUY"
         elif prediction == 0:
@@ -78,57 +34,144 @@ def ml_random_forest(market_data_client, consumer, trading_data_client, strategy
         else:
             decision = "HOLD"
 
-        # Recent live price
+        # DETERMINE TRADE SIZE
         current_price = get_latest_price(consumer)
-
-        # Position sizing
         cash_balance = get_cash_balance(trading_data_client, strategy_name, symbol)
         allocation_pct = 0.10
         qty = (cash_balance * allocation_pct) / current_price if decision in ["BUY", "SELL"] else 0
 
+        # RECORD EXECUTION LOGIC
         execution_logic = (
-            f"ML RandomForest decision: {decision}\n"
-            f"Features: {latest_features.tolist()}\n"
+            f"{strategy_name} decision: {decision}\n"
+            f"Features: {feature_df_clean.to_dict(orient='records')[0]}\n"
             f"Current price: {current_price:.2f}"
         )
 
+        #SEND TRADE TO EXECTUION ENGINE
         return decision, current_price, qty, execution_logic
 
-    except Exception:
-        logger.exception(f"Error in ML RandomForest strategy for {strategy_name}, {symbol}.")
+    except Exception as e:
+        logger.exception(f"Error in {strategy_name} strategy: {e}")
         return "HOLD", 0, 0, "Error"
-
-
-def long_only(market_data_client, consumer, trading_data_client, strategy_name, symbol, stop_event):
-    """
-    Buy-and-hold benchmark strategy:
-    - Holds the starting portfolio without trading
-    - Useful as a passive performance baseline
-    """
+    
+def gradient_boosting_second_ticks(market_data_client, consumer, trading_data_client, strategy_name, symbol, stop_event):
     try:
-        # FREQUENCY LOGIC
-        if stop_event.wait(60):
+        # SET TRADE FREQUENCY
+        if stop_event.wait(15):
             return None, None, None, None
-        
-        # HISTORICAL DATA
 
-        # RECENT DATA
+        # GET PRODUCTION DATA
+        prod_df = get_production_data_seconds(market_data_client)
+        feature_df = build_features(prod_df)
+        feature_df_clean = feature_df.drop(columns=["price", "ts"]).iloc[[-1]]
+
+        # GET MODEL
+        s3_key = "models/gradient_boosting_-_second_features.pkl"
+        local_path = "models/gradient_boosting_-_second_features.pkl"
+        ml_model = get_ml_model(s3_key, local_path)
+
+        # PREDICT FROM MODEL
+        prediction = ml_model.predict(feature_df_clean)[0]
+        if prediction == 2:
+            decision = "BUY"
+        elif prediction == 0:
+            decision = "SELL"
+        else:
+            decision = "HOLD"
+
+        # DETERMINE TRADE SIZE
         current_price = get_latest_price(consumer)
+        cash_balance = get_cash_balance(trading_data_client, strategy_name, symbol)
+        allocation_pct = 0.10
+        qty = (cash_balance * allocation_pct) / current_price if decision in ["BUY", "SELL"] else 0
 
-        #SIGNAL LOGIC
-        decision = "HOLD"
-
-        # SIZING LOGIC
-        qty = 0
-
-        # EXECUTION LOGIC
+        # RECORD EXECUTION LOGIC
         execution_logic = (
-            f"{decision} signal has been generated.\n"
+            f"{strategy_name} decision: {decision}\n"
+            f"Features: {feature_df_clean.to_dict(orient='records')[0]}\n"
+            f"Current price: {current_price:.2f}"
         )
 
+        #SEND TRADE TO EXECTUION ENGINE
         return decision, current_price, qty, execution_logic
+
+    except Exception as e:
+        logger.exception(f"Error in {strategy_name} strategy: {e}")
+        return "HOLD", 0, 0, "Error"
+    
+
+def logistic_regression_second_ticks(market_data_client, consumer, trading_data_client, strategy_name, symbol, stop_event):
+    try:
+        # SET TRADE FREQUENCY
+        if stop_event.wait(15):
+            return None, None, None, None
+
+        # GET PRODUCTION DATA
+        prod_df = get_production_data_seconds(market_data_client)
+        feature_df = build_features(prod_df)
+        feature_df_clean = feature_df.drop(columns=["price", "ts"]).iloc[[-1]]
+
+        # GET MODEL
+        s3_key = "models/logistic_regression_-_second_features.pkl"
+        local_path = "models/logistic_regression_-_second_features.pkl"
+        ml_model = get_ml_model(s3_key, local_path)
+
+        # PREDICT FROM MODEL
+        prediction = ml_model.predict(feature_df_clean)[0]
+        if prediction == 2:
+            decision = "BUY"
+        elif prediction == 0:
+            decision = "SELL"
+        else:
+            decision = "HOLD"
+
+        # DETERMINE TRADE SIZE
+        current_price = get_latest_price(consumer)
+        cash_balance = get_cash_balance(trading_data_client, strategy_name, symbol)
+        allocation_pct = 0.10
+        qty = (cash_balance * allocation_pct) / current_price if decision in ["BUY", "SELL"] else 0
+
+        # RECORD EXECUTION LOGIC
+        execution_logic = (
+            f"{strategy_name} decision: {decision}\n"
+            f"Features: {feature_df_clean.to_dict(orient='records')[0]}\n"
+            f"Current price: {current_price:.2f}"
+        )
+
+        #SEND TRADE TO EXECTUION ENGINE
+        return decision, current_price, qty, execution_logic
+
+    except Exception as e:
+        logger.exception(f"Error in {strategy_name} strategy: {e}")
+        return "HOLD", 0, 0, "Error"
+
+def long_only(market_data_client, consumer, trading_data_client, strategy_name, symbol, stop_event):
+    try:
+        # SET TRADE FREQUENCY
+        if stop_event.wait(60):
+            return None, None, None, None
+
+        # GET PRODUCTION DATA
+
+        # GET MODEL
+        decision = "HOLD"
+
+        # PREDICT FROM MODEL
+
+        # DETERMINE TRADE SIZE
+        current_price = get_latest_price(consumer)
+        qty = 0
+
+        # RECORD EXECUTION LOGIC
+        execution_logic = (
+            f"{strategy_name} decision: {decision}\n"
+        )
+        
+        #SEND TRADE TO EXECTUION ENGINE
+        return decision, current_price, qty, execution_logic
+
     except Exception:
-        logger.exception(f"Error in signal generation logic for {strategy_name}, {symbol}.")
+        logger.exception(f"Error in {strategy_name} strategy.")
         return "HOLD", 0, 0, "Error"
 
 
@@ -152,15 +195,39 @@ def get_strategies(stop_event):
             stop_event=stop_event,
             kafka_topic="price_ticks",
             symbol="ETH",
-            strategy_name="ML_RandomForest",
+            strategy_name="Random_Forest",
             starting_cash=200000,
             starting_mv=0,
             monitor_frequency=MONITOR_FREQUENCY,
-            strategy_function=ml_random_forest,
+            strategy_function=ml_random_forest_second_ticks,
             strategy_description=(
-                "Machine learning strategy using RandomForest classifier. "
-                "Features: returns, SMA20, SMA60, volatility. "
-                "Labels future returns as Buy/Sell/Hold. Runs every minute."
-            )
-)
+                "Random Forest - Second Ticks"
+            ),
+        ),
+        StrategyTemplate(
+            stop_event=stop_event,
+            kafka_topic="price_ticks",
+            symbol="ETH",
+            strategy_name="Gradient_Boosting",
+            starting_cash=200000,
+            starting_mv=0,
+            monitor_frequency=MONITOR_FREQUENCY,
+            strategy_function=gradient_boosting_second_ticks,
+            strategy_description=(
+                "Gradient Boosting - Second Ticks"
+            ),
+        ),
+        StrategyTemplate(
+            stop_event=stop_event,
+            kafka_topic="price_ticks",
+            symbol="ETH",
+            strategy_name="Logistic_Regression",
+            starting_cash=200000,
+            starting_mv=0,
+            monitor_frequency=MONITOR_FREQUENCY,
+            strategy_function=logistic_regression_second_ticks,
+            strategy_description=(
+                "Logistic Regression - Second Ticks"
+            )        
+        )
     ]

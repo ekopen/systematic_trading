@@ -5,46 +5,6 @@ from data import get_latest_price
 import logging, time
 logger = logging.getLogger(__name__)
 
-def delete_portfolio_tables(client):
-    logger.info("Deleting portfolio tables if exists.")
-    client.command("DROP TABLE IF EXISTS portfolio_db_key SYNC")
-    client.command("DROP TABLE IF EXISTS portfolio_db_ts SYNC")
-    logger.info("Portfolio tables deleted in ClickHouse.")
-
-def create_portfolio_table_key(client):
-    logger.info("Creating portfolio table key if not exists.")
-    client.command("""
-        CREATE TABLE IF NOT EXISTS portfolio_db_key (
-            last_updated DateTime DEFAULT now(),
-            cash_balance Float64,
-            symbol String,
-            quantity Float64,
-            market_value Float64,
-            portfolio_value Float64,
-            strategy_name String,
-            strategy_description String
-        ) ENGINE = ReplacingMergeTree()
-        ORDER BY (strategy_name, symbol)
-    """)
-    logger.info("Portfolio table key created in ClickHouse.")
-
-def create_portfolio_table_timeseries(client):
-    logger.info("Creating portfolio table time series if not exists.")
-    client.command("""
-        CREATE TABLE IF NOT EXISTS portfolio_db_ts (
-            time DateTime DEFAULT now(),
-            cash_balance Float64,
-            symbol String,
-            quantity Float64,
-            market_value Float64,
-            portfolio_value Float64,
-            strategy_name String
-        ) ENGINE = MergeTree()
-        ORDER BY (strategy_name, symbol, time)
-        PRIMARY KEY (strategy_name, symbol)
-    """)
-    logger.info("Portfolio table time series created in ClickHouse.")
-
 def initialize_portfolio(client, starting_cash, symbol, starting_market_value, strategy_name, initialization_price, strategy_description):
     logger.info("Initializing portfolio with starting cash and market value.")
     try:
@@ -57,28 +17,24 @@ def initialize_portfolio(client, starting_cash, symbol, starting_market_value, s
         )
         """)
         logger.info("Portfolio initialized with starting values.")
-    except Exception:
-        logger.exception("Error initializing portfolio in ClickHouse.")
+    except Exception as e:
+        logger.exception(f"Error initializing portfolio in ClickHouse: {e}")
 
 def portfolio_key_order_update(client, symbol, quantity_change, market_value_change, strategy_name):
-    logger.info("Updating portfolio key table with a new order.")
     try:
         client.command(f"""
             ALTER TABLE portfolio_db_key UPDATE quantity = quantity + {quantity_change}, market_value = market_value + {market_value_change}, cash_balance = cash_balance + {-market_value_change}, portfolio_value = cash_balance + market_value
             WHERE symbol = '{symbol}' AND strategy_name = '{strategy_name}'
         """)
-        logger.info("Portfolio key table updated with a new order.")
-    except Exception:
-        logger.exception("Error updating portfolio key table in ClickHouse.")
+    except Exception as e:
+        logger.exception(f"Error updating portfolio key table in ClickHouse: {e}")
 
 def portfolio_monitoring(stop_event, frequency, symbol, strategy_name, consumer, client):
     logger.info("Starting portfolio monitoring thread.")
     while not stop_event.is_set():
         try:
-            logger.info("Updating portfolio key table per regular monitoring.")
             price = get_latest_price(consumer)
             if price is None:
-                logger.warning("No price received from Kafka. Skipping this update cycle.")
                 time.sleep(frequency)
                 continue
 
@@ -89,7 +45,6 @@ def portfolio_monitoring(stop_event, frequency, symbol, strategy_name, consumer,
                        portfolio_value = cash_balance + market_value
                 WHERE symbol = '{symbol}' AND strategy_name = '{strategy_name}'
             """)
-            logger.info("Updated portfolio key table per regular monitoring.")
 
             # Insert latest values into timeseries table
             rows = client.query(f"""
@@ -106,24 +61,19 @@ def portfolio_monitoring(stop_event, frequency, symbol, strategy_name, consumer,
                         "cash_balance", "symbol", "quantity", "market_value", "strategy_name", "portfolio_value"
                     ]
                 )
-                logger.info("Inserted latest portfolio key values into timeseries table.")
-            else:
-                logger.warning("No rows found in portfolio_db_key for this strategy. Skipping insert.")
 
-        except Exception:
-            logger.exception("Error during portfolio monitoring iteration.")
+        except Exception as e:
+            logger.exception(f"Error during portfolio monitoring iteration: {e}")
 
-        logger.info(f"Sleeping for {frequency} seconds before next portfolio monitoring update.")
         time.sleep(frequency)
 
     try:
         logger.info("Portfolio monitoring shutting down.")
         consumer.close()
-    except Exception:
-        logger.exception("Error during portfolio monitoring shutdown.")
+    except Exception as e:
+        logger.exception(f"Error during portfolio monitoring shutdown: {e}")
 
 def get_cash_balance(client, strategy_name, symbol):
-    logger.info("Checking cash balance for trade.")
     try:
         rows = client.query(f"""
             SELECT cash_balance 
@@ -132,11 +82,10 @@ def get_cash_balance(client, strategy_name, symbol):
         """).result_rows
         cash_balance = rows[0][0]
         return cash_balance
-    except Exception:
-        logger.exception("Error retrieving cash balance")
+    except Exception as e:
+        logger.exception("Error retrieving cash balance: {e}")
 
 def get_qty_balance(client, strategy_name, symbol):
-    logger.info("Checking quantity balance for trade.")
     try:
         rows = client.query(f"""
             SELECT quantity 
@@ -145,5 +94,5 @@ def get_qty_balance(client, strategy_name, symbol):
         """).result_rows
         quantity = rows[0][0]
         return quantity
-    except Exception:
-        logger.exception("Error retrieving quantity balance")
+    except Exception as e:
+        logger.exception(f"Error retrieving quantity balance: {e}")

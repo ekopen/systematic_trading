@@ -15,10 +15,14 @@ Continuosly runs trading algorithims, records execution activity, and monitors p
 
 ## Future Improvements
 **Planned Features:**
+- Improve the approach to modularity. Some things (like strategy functions) are overly modularized.
 - Better orchestrate all the strategies. They should be individually turned on and off.
-- Increase complexity of trading decision logic to get out of simple buy/hold/sell. Eventually, ML should be used to fuel decisions, with dramatically more flexibility in strategy implementation. Risk considerations should be more in depth.
-- Start tracking PNL metrics, risk metrics, etc.
+- Start tracking PNL metrics, risk metrics, etc, and have those be part of the risk consideration.
 - Implement slippage conditions.
- 
+- Have model refreshes triggered by pings, not on a timed schedule.
+ -Make portfolio monitoring be an aggregate function, not individual for every strategy.
+- Implement shut down logic/initialization logic (such as closing all positions at shut down or divvying up cash at startup)
+
 **Known Issues:**
--  The Kafka consumer may be inefficient right now, and should be looked into.
+- The Kafka consumer may be inefficient right now, and should be looked into.
+- Shut down is not clean, the process needs to be fixed for errors.

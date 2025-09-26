@@ -23,7 +23,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 # shutdown
 stop_event = threading.Event()
 def handle_signal(signum, frame):
@@ -55,6 +54,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         logger.info("KeyboardInterrupt received. Shutting down...")
         stop_event.set()
-    except Exception:
-        logger.exception("Fatal error in main loop")
+    except Exception as e:
+        logger.exception(f"Fatal error in main loop: {e}")
         
