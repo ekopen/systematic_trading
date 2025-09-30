@@ -7,7 +7,7 @@ load_dotenv() # for when running locally
 MODEL_REFRESH_INTERVAL = 43200 # how often to refresh ml models, in seconds
 
 MAX_DRAWDOWN = .5 #maximum amount of portfolio value willing to lose before pausing trading
-MAX_ALLOCATION = .25 #maxmimum amount of value per trade compared to portfolio value willing to make
+MAX_ALLOCATION = .5 #maxmimum amount of value per trade compared to portfolio value willing to make
 MAX_SHORT = 200000 #max short value of any portfolio
 
 MARKET_DATA_CLICKHOUSE_IP = "159.203.124.175"

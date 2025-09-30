@@ -15,6 +15,7 @@ def get_strategies(stop_event):
             monitor_frequency=60,
             strategy_description=("Buy and hold benchmark strategy."),
             execution_frequency=3600,
+            allocation_pct = 1,
             s3_key = "models/long_only.pkl",
             local_path = "models/long_only.pkl"
         ),
@@ -28,6 +29,7 @@ def get_strategies(stop_event):
             monitor_frequency=60,
             strategy_description=("Ensemble of decision trees that captures non-linear relationships."),
             execution_frequency=60,
+            allocation_pct = .05,
             s3_key = "models/random_forest.pkl",
             local_path = "models/random_forest.pkl"
         ),
@@ -41,6 +43,7 @@ def get_strategies(stop_event):
             monitor_frequency=60,
             strategy_description=("Sequentially builds an ensemble to reduce errors and improve accuracy."),
             execution_frequency=120,
+            allocation_pct = .1,
             s3_key = "models/gradient_boosting.pkl",
             local_path = "models/gradient_boosting.pkl"
         ),
@@ -54,6 +57,7 @@ def get_strategies(stop_event):
             monitor_frequency=60,
             strategy_description=("A linear baseline model for classification tasks."),
             execution_frequency=60,
+            allocation_pct = .025,
             s3_key = "models/logistic_regression.pkl",
             local_path = "models/logistic_regression.pkl"
         ),
@@ -67,6 +71,7 @@ def get_strategies(stop_event):
             monitor_frequency=60,
             strategy_description=("Captures temporal dependencies and sequential patterns in data."),
             execution_frequency=300,
+            allocation_pct = .15,
             s3_key = "models/lstm.h5",
             local_path = "models/lstm.h5"
         ),
@@ -80,6 +85,7 @@ def get_strategies(stop_event):
             monitor_frequency=60,
             strategy_description=(" Separates classes using non-linear decision boundaries."),
             execution_frequency=120,
+            allocation_pct = .125,
             s3_key = "models/svm_(rbf_kernel).pkl",
             local_path = "models/svm_(rbf_kernel).pkl"
         ),

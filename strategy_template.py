@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class StrategyTemplate:
 
-    def __init__(self, stop_event, kafka_topic, symbol, strategy_name, starting_cash, starting_mv, monitor_frequency, strategy_description, execution_frequency, s3_key, local_path):
+    def __init__(self, stop_event, kafka_topic, symbol, strategy_name, starting_cash, starting_mv, monitor_frequency, strategy_description, execution_frequency, allocation_pct, s3_key, local_path):
         self.stop_event = stop_event
         self.kafka_topic = kafka_topic
         self.symbol = symbol
@@ -21,6 +21,7 @@ class StrategyTemplate:
         self.monitor_frequency = monitor_frequency
         self.strategy_description = strategy_description
         self.execution_frequency = execution_frequency
+        self.allocation_pct = allocation_pct
         self.s3_key = s3_key
         self.local_path = local_path
 
@@ -83,7 +84,7 @@ class StrategyTemplate:
                 # DETERMINE TRADE SIZE
                 current_price = get_latest_price(consumer)
                 cash_balance = get_cash_balance(trading_data_client, self.strategy_name, self.symbol)
-                allocation_pct = 0.25
+                allocation_pct = self.allocation_pct
                 qty = (cash_balance * allocation_pct) / current_price if decision in ["BUY", "SELL"] else 0
 
                 # RECORD EXECUTION LOGIC
