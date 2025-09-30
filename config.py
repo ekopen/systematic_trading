@@ -4,8 +4,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv() # for when running locally
 
-MONITOR_FREQUENCY = 60 # seconds per monitoring instance, where we record portfolio data
-MODEL_REFRESH_INTERVAL = 3600 # how often to refresh ml models, in seconds
+MODEL_REFRESH_INTERVAL = 43200 # how often to refresh ml models, in seconds
 
 MAX_DRAWDOWN = .5 #maximum amount of portfolio value willing to lose before pausing trading
 MAX_ALLOCATION = .25 #maxmimum amount of value per trade compared to portfolio value willing to make

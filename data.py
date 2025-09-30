@@ -30,8 +30,8 @@ def market_clickhouse_client():
 # portfolio data
 def trading_clickhouse_client():
     return clickhouse_connect.get_client(
-        # host="clickhouse",
-        host="localhost",
+        host="clickhouse",
+        # host="localhost",
         port=8123,
         username="default",
         password="mysecurepassword",

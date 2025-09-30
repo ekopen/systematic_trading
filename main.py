@@ -1,13 +1,10 @@
 # main.py
 # starts and stops the trading module
 
-# imports
 import threading, time, signal, logging
 from strategies import get_strategies
-
-# logging 
 from logging.handlers import RotatingFileHandler
-# logging 
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",

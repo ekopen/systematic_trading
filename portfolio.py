@@ -83,7 +83,7 @@ def get_cash_balance(client, strategy_name, symbol):
         cash_balance = rows[0][0]
         return cash_balance
     except Exception as e:
-        logger.exception("Error retrieving cash balance: {e}")
+        logger.exception(f"Error retrieving cash balance: {e}")
 
 def get_qty_balance(client, strategy_name, symbol):
     try:
