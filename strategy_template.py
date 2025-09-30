@@ -2,6 +2,7 @@
 # module that contains a default class for all strategies
 
 import threading, logging
+import numpy as np
 from data import get_kafka_data, get_latest_price, market_clickhouse_client, trading_clickhouse_client
 from portfolio import initialize_portfolio, portfolio_monitoring, get_cash_balance
 from ml_functions import get_production_data_seconds, build_features, get_ml_model
@@ -45,46 +46,63 @@ class StrategyTemplate:
 
     def ml_strategy(self, market_client, consumer, trading_data_client):
         logger.info(f"Beginning strategy signal generation for {self.symbol}, {self.strategy_name}.")
+        while not self.stop_event.is_set():
+            try:
+                # SET TRADE FREQUENCY
+                if self.stop_event.wait(self.execution_frequency): # 15 seconds default
+                    return None, None, None, None
+
+                # GET PRODUCTION DATA
+                prod_df = get_production_data_seconds(market_client)
+                feature_df = build_features(prod_df)
+                feature_df_clean = feature_df.drop(columns=["price", "ts"]).iloc[[-1]]
+
+                # GET MODEL
+                ml_model = get_ml_model(self.s3_key, self.local_path)
+
+                # PREDICT FROM MODEL
+                raw_pred = ml_model.predict(feature_df_clean)
+                raw_pred = np.array(raw_pred)
+
+                # Normalize prediction shape:
+                if raw_pred.ndim > 1 and raw_pred.shape[1] > 1:  # probability vector
+                    prediction = int(np.argmax(raw_pred, axis=1)[0])
+                elif raw_pred.ndim > 1:  # (n,1) shaped
+                    prediction = int(raw_pred[0][0])
+                else:
+                    prediction = int(raw_pred[0])
+
+                # Map to decision
+                if prediction == 2:
+                    decision = "BUY"
+                elif prediction == 0:
+                    decision = "SELL"
+                else:
+                    decision = "HOLD"
+
+                # DETERMINE TRADE SIZE
+                current_price = get_latest_price(consumer)
+                cash_balance = get_cash_balance(trading_data_client, self.strategy_name, self.symbol)
+                allocation_pct = 0.25
+                qty = (cash_balance * allocation_pct) / current_price if decision in ["BUY", "SELL"] else 0
+
+                # RECORD EXECUTION LOGIC
+                execution_logic = (
+                    f"{self.strategy_name} decision: {decision}\n"
+                    f"Features: {feature_df_clean.to_dict(orient='records')[0]}\n"
+                    f"Current price: {current_price:.2f}"
+                )
+
+                #SEND TRADE TO EXECTUION ENGINE
+                execute_trade(trading_data_client, consumer, decision, current_price, qty, self.strategy_name, self.symbol, execution_logic)
+
+            except Exception as e:
+                logger.exception(f"Error in {self.strategy_name} strategy: {e}")
         try:
-            # SET TRADE FREQUENCY
-            if self.stop_event.wait(self.execution_frequency): # 15 seconds default
-                return None, None, None, None
-
-            # GET PRODUCTION DATA
-            prod_df = get_production_data_seconds(market_client)
-            feature_df = build_features(prod_df)
-            feature_df_clean = feature_df.drop(columns=["price", "ts"]).iloc[[-1]]
-
-            # GET MODEL
-            ml_model = get_ml_model(self.s3_key, self.local_path)
-
-            # PREDICT FROM MODEL
-            prediction = ml_model.predict(feature_df_clean)[0]
-            if prediction == 2:
-                decision = "BUY"
-            elif prediction == 0:
-                decision = "SELL"
-            else:
-                decision = "HOLD"
-
-            # DETERMINE TRADE SIZE
-            current_price = get_latest_price(consumer)
-            cash_balance = get_cash_balance(trading_data_client, self.strategy_name, self.symbol)
-            allocation_pct = 0.25
-            qty = (cash_balance * allocation_pct) / current_price if decision in ["BUY", "SELL"] else 0
-
-            # RECORD EXECUTION LOGIC
-            execution_logic = (
-                f"{self.strategy_name} decision: {decision}\n"
-                f"Features: {feature_df_clean.to_dict(orient='records')[0]}\n"
-                f"Current price: {current_price:.2f}"
-            )
-
-            #SEND TRADE TO EXECTUION ENGINE
-            execute_trade(trading_data_client, consumer, decision, current_price, qty, self.strategy_name, self.symbol, execution_logic)
-
+            logger.info("Signal generator shutting down.")
+            consumer.close()
         except Exception as e:
-            logger.exception(f"Error in {self.strategy_name} strategy: {e}")
+            logger.exception(f"Error during signal generator shutdown for {self.strategy_name}, {self.symbol}: {e}")
 
     def run_strategy(self):
         logger.info(f"Running strategy for {self.symbol}, {self.strategy_name}.")

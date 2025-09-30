@@ -4,7 +4,8 @@
 
 from config import MODEL_REFRESH_INTERVAL
 from data import s3, bucket_name
-import logging, joblib, time
+from tensorflow.keras.models import load_model
+import logging, joblib, time, os
 logger = logging.getLogger(__name__)
 
 # cache state
@@ -17,9 +18,9 @@ def get_production_data_seconds(client):
             toStartOfInterval(timestamp, INTERVAL 15 SECOND) AS ts, 
             avg(price) AS price
         FROM ticks_db
+        WHERE timestamp >= now() - INTERVAL 30 MINUTE
         GROUP BY ts
         ORDER BY ts DESC
-        LIMIT 120
     """)
     df = df.sort_index()
     return df
@@ -51,6 +52,10 @@ def build_features(df):
     df = df.dropna()
     return df
 
+class HoldModel:
+    def predict(self, X):
+        return [1] * len(X)
+
 def get_ml_model(s3_key, local_path):
     now = time.time()
 
@@ -63,7 +68,15 @@ def get_ml_model(s3_key, local_path):
     # otherwise, refresh
     logger.info(f"Downloading model {s3_key} from S3...")
     s3.download_file(bucket_name, s3_key, local_path)
-    ml_model = joblib.load(local_path)
+
+    # choose loader based on file extension for lstm h5
+    _, ext = os.path.splitext(local_path)
+    if "long_only" in local_path:   # special-case HOLD
+        return HoldModel()
+    elif ext == ".h5":
+        ml_model = load_model(local_path)
+    elif ext == ".pkl":
+        ml_model = joblib.load(local_path)
 
     # update cache
     cached_models[s3_key] = ml_model

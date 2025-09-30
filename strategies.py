@@ -13,8 +13,8 @@ def get_strategies(stop_event):
             starting_cash=0,
             starting_mv=200000,
             monitor_frequency=60,
-            strategy_description=("Benchmark strategy."),
-            execution_frequency=30,
+            strategy_description=("Buy and hold benchmark strategy."),
+            execution_frequency=3600,
             s3_key = "models/long_only.pkl",
             local_path = "models/long_only.pkl"
         ),
@@ -26,8 +26,8 @@ def get_strategies(stop_event):
             starting_cash=200000,
             starting_mv=0,
             monitor_frequency=60,
-            strategy_description=("Splits data with many trees."),
-            execution_frequency=30,
+            strategy_description=("Ensemble of decision trees that captures non-linear relationships."),
+            execution_frequency=60,
             s3_key = "models/random_forest.pkl",
             local_path = "models/random_forest.pkl"
         ),
@@ -39,8 +39,8 @@ def get_strategies(stop_event):
             starting_cash=200000,
             starting_mv=0,
             monitor_frequency=60,
-            strategy_description=("Builds strong ensemble step by step."),
-            execution_frequency=30,
+            strategy_description=("Sequentially builds an ensemble to reduce errors and improve accuracy."),
+            execution_frequency=120,
             s3_key = "models/gradient_boosting.pkl",
             local_path = "models/gradient_boosting.pkl"
         ),
@@ -52,8 +52,8 @@ def get_strategies(stop_event):
             starting_cash=200000,
             starting_mv=0,
             monitor_frequency=60,
-            strategy_description=("Simple linear baseline."),
-            execution_frequency=15,
+            strategy_description=("A linear baseline model for classification tasks."),
+            execution_frequency=60,
             s3_key = "models/logistic_regression.pkl",
             local_path = "models/logistic_regression.pkl"
         ),
@@ -65,10 +65,10 @@ def get_strategies(stop_event):
             starting_cash=200000,
             starting_mv=0,
             monitor_frequency=60,
-            strategy_description=("Learns patterns over time in sequences."),
-            execution_frequency=30,
-            s3_key = "models/lstm.pkl",
-            local_path = "models/lstm.pkl"
+            strategy_description=("Captures temporal dependencies and sequential patterns in data."),
+            execution_frequency=300,
+            s3_key = "models/lstm.h5",
+            local_path = "models/lstm.h5"
         ),
         StrategyTemplate(
             stop_event=stop_event,
@@ -78,8 +78,8 @@ def get_strategies(stop_event):
             starting_cash=200000,
             starting_mv=0,
             monitor_frequency=60,
-            strategy_description=("Finds complex decision boundaries."),
-            execution_frequency=30,
+            strategy_description=(" Separates classes using non-linear decision boundaries."),
+            execution_frequency=120,
             s3_key = "models/svm_(rbf_kernel).pkl",
             local_path = "models/svm_(rbf_kernel).pkl"
         ),
