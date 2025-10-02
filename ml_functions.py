@@ -12,17 +12,14 @@ logger = logging.getLogger(__name__)
 cached_models = {}
 last_refresh_times = {}
 
-def get_production_data_seconds(client):
-    df = client.query_df("""
-        SELECT 
-            toStartOfInterval(timestamp, INTERVAL 15 SECOND) AS ts, 
-            avg(price) AS price
-        FROM ticks_db
-        WHERE timestamp >= now() - INTERVAL 30 MINUTE
-        GROUP BY ts
-        ORDER BY ts DESC
+def get_production_data(client, symbol):
+    df = client.query_df(f"""
+        SELECT minute, open as price
+        FROM minute_bars_final
+        WHERE symbol = '{symbol}'        
+        ORDER BY minute ASC
+        LIMIT 120                      
     """)
-    df = df.sort_index()
     return df
 
 def build_features(df):
@@ -41,7 +38,7 @@ def build_features(df):
     gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
     loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
     rs = gain / loss
-    df["14"] = 100 - (100 / (1 + rs))
+    df["rsi_14"] = 100 - (100 / (1 + rs))
 
     # MACD
     ema12 = df["price"].ewm(span=12, adjust=False).mean()
@@ -51,10 +48,6 @@ def build_features(df):
     
     df = df.dropna()
     return df
-
-class HoldModel:
-    def predict(self, X):
-        return [1] * len(X)
 
 def get_ml_model(s3_key, local_path):
     now = time.time()
@@ -71,11 +64,9 @@ def get_ml_model(s3_key, local_path):
 
     # choose loader based on file extension for lstm h5
     _, ext = os.path.splitext(local_path)
-    if "long_only" in local_path:   # special-case HOLD
-        return HoldModel()
-    elif ext == ".h5":
+    if ext == ".h5":
         ml_model = load_model(local_path)
-    elif ext == ".pkl":
+    if ext == ".pkl":
         ml_model = joblib.load(local_path)
 
     # update cache

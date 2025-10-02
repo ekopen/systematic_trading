@@ -1,7 +1,9 @@
 # main.py
 # starts and stops the trading module
 
+from config import SYMBOLS
 import threading, time, signal, logging
+from data import start_price_listener
 from strategies import get_strategies
 from logging.handlers import RotatingFileHandler
 
@@ -34,6 +36,8 @@ strategy_arr = get_strategies(stop_event)
 if __name__ == "__main__":
     try:
         logger.info("System starting.")
+
+        start_price_listener(kafka_topic="price_ticks", group_id="trading-module-listener", stop_event=stop_event, symbols=SYMBOLS)
 
         # start trading strategies
         all_threads = []

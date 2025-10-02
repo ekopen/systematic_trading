@@ -8,13 +8,20 @@ logger = logging.getLogger(__name__)
 
 def check_position_size(client, symbol, qty, price, strategy_name, max_allocation=MAX_ALLOCATION):
     try:
+        if strategy_name == 'Long Only':
+            return True, "Long Only automatic bypass"
+
         rows = client.query(f"""
-            SELECT portfolio_value 
+            SELECT portfolio_value , quantity
             FROM portfolio_db_key 
             WHERE strategy_name = '{strategy_name}' AND symbol = '{symbol}'
         """).result_rows
-        portfolio_value = rows[0][0]
+        portfolio_value , current_qty = rows[0]
         trade_value = abs(qty * price)
+
+        if (current_qty > 0 and qty < 0) or (current_qty < 0 and qty > 0):
+            return True, "Closing/reducing position — bypass allocation check"
+
         if trade_value > max_allocation * portfolio_value:
             msg = f"Trade value {trade_value:.2f} exceeds max allocation {max_allocation*100:.1f}% of portfolio {portfolio_value:.2f}"
             logger.warning(msg)
@@ -29,6 +36,11 @@ def check_cash_balance(client, qty, direction, price, strategy_name, symbol):
     try:
         cash_balance = get_cash_balance(client, strategy_name, symbol)
         trade_cost = qty * price * direction
+        current_qty = get_qty_balance(client, strategy_name, symbol)
+
+        if (current_qty > 0 and direction == -1) or (current_qty < 0 and direction == 1):
+            return True, "Closing/reducing position — bypass cash check"
+
         if direction == 1 and trade_cost > cash_balance:
             msg = f"Not enough cash. Needed {trade_cost:.2f}, available {cash_balance:.2f}"
             logger.warning(msg)
@@ -54,6 +66,8 @@ def check_qty_balance(client, qty, direction, price, strategy_name, symbol):
 
 
 def check_max_drawdown(client, strategy_name, symbol, max_drawdown=MAX_DRAWDOWN):
+    if strategy_name == 'Long Only':
+        return True, "Long Only automatic bypass"
     try:
         rows = client.query(f"""
             WITH

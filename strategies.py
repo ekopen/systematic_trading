@@ -1,6 +1,7 @@
 # strategies.py
 # contains all strategy functions, and packages them so they can be sent to main.py
 
+from config import MONITORING_FREQUENCY
 from strategy_template import StrategyTemplate
 
 def get_strategies(stop_event):
@@ -10,14 +11,75 @@ def get_strategies(stop_event):
             kafka_topic="price_ticks",
             symbol="ETH",
             strategy_name="Long Only",
-            starting_cash=0,
-            starting_mv=200000,
-            monitor_frequency=60,
+            starting_cash=200000,
+            starting_mv=0,
+            monitor_frequency=MONITORING_FREQUENCY,
             strategy_description=("Buy and hold benchmark strategy."),
-            execution_frequency=3600,
+            execution_frequency= 60 * 60 * 24,
             allocation_pct = 1,
-            s3_key = "models/long_only.pkl",
-            local_path = "models/long_only.pkl"
+            reset_interval = 60 * 60 * 24,
+            s3_key = "models/long-only.pkl",
+            local_path = "models/long-only.pkl"
+        ),
+        StrategyTemplate(
+            stop_event=stop_event,
+            kafka_topic="price_ticks",
+            symbol="BTC",
+            strategy_name="Long Only",
+            starting_cash=200000,
+            starting_mv=0,
+            monitor_frequency=MONITORING_FREQUENCY,
+            strategy_description=("Buy and hold benchmark strategy."),
+            execution_frequency= 60 * 60 * 24,
+            allocation_pct = 1,
+            reset_interval = 60 * 60 * 24,
+            s3_key = "models/long-only.pkl",
+            local_path = "models/long-only.pkl"
+        ),
+        StrategyTemplate(
+            stop_event=stop_event,
+            kafka_topic="price_ticks",
+            symbol="XRP",
+            strategy_name="Long Only",
+            starting_cash=200000,
+            starting_mv=0,
+            monitor_frequency=MONITORING_FREQUENCY,
+            strategy_description=("Buy and hold benchmark strategy."),
+            execution_frequency= 60 * 60 * 24,
+            allocation_pct = 1,
+            reset_interval = 60 * 60 * 24,
+            s3_key = "models/long-only.pkl",
+            local_path = "models/long-only.pkl"
+        ),
+        StrategyTemplate(
+            stop_event=stop_event,
+            kafka_topic="price_ticks",
+            symbol="ADA",
+            strategy_name="Long Only",
+            starting_cash=200000,
+            starting_mv=0,
+            monitor_frequency=MONITORING_FREQUENCY,
+            strategy_description=("Buy and hold benchmark strategy."),
+            execution_frequency= 60 * 60 * 24,
+            allocation_pct = 1,
+            reset_interval = 60 * 60 * 24,
+            s3_key = "models/long-only.pkl",
+            local_path = "models/long-only.pkl"
+        ),
+        StrategyTemplate(
+            stop_event=stop_event,
+            kafka_topic="price_ticks",
+            symbol="SOL",
+            strategy_name="Long Only",
+            starting_cash=200000,
+            starting_mv=0,
+            monitor_frequency=MONITORING_FREQUENCY,
+            strategy_description=("Buy and hold benchmark strategy."),
+            execution_frequency= 60 * 60 * 24,
+            allocation_pct = 1,
+            reset_interval = 60 * 60 * 24,
+            s3_key = "models/long-only.pkl",
+            local_path = "models/long-only.pkl"
         ),
         StrategyTemplate(
             stop_event=stop_event,
@@ -26,12 +88,13 @@ def get_strategies(stop_event):
             strategy_name="Random_Forest",
             starting_cash=200000,
             starting_mv=0,
-            monitor_frequency=60,
+            monitor_frequency=MONITORING_FREQUENCY,
             strategy_description=("Ensemble of decision trees that captures non-linear relationships."),
-            execution_frequency=60,
+            execution_frequency= 60 * 5,
             allocation_pct = .05,
-            s3_key = "models/random_forest.pkl",
-            local_path = "models/random_forest.pkl"
+            reset_interval = 60 * 60 * 4,
+            s3_key = "models/Random-Forest-ETH-model.pkl",
+            local_path = "models/Random-Forest-ETH-model.pkl"
         ),
         StrategyTemplate(
             stop_event=stop_event,
@@ -40,12 +103,13 @@ def get_strategies(stop_event):
             strategy_name="Gradient_Boosting",
             starting_cash=200000,
             starting_mv=0,
-            monitor_frequency=60,
+            monitor_frequency=MONITORING_FREQUENCY,
             strategy_description=("Sequentially builds an ensemble to reduce errors and improve accuracy."),
-            execution_frequency=120,
+            execution_frequency= 60 * 10,
             allocation_pct = .1,
-            s3_key = "models/gradient_boosting.pkl",
-            local_path = "models/gradient_boosting.pkl"
+            reset_interval = 60 * 60 * 8,
+            s3_key = "models/Gradient-Boosting-ETH-model.pkl",
+            local_path = "models/Gradient-Boosting-ETH-model.pkl"
         ),
         StrategyTemplate(
             stop_event=stop_event,
@@ -54,12 +118,13 @@ def get_strategies(stop_event):
             strategy_name="Logistic_Regression",
             starting_cash=200000,
             starting_mv=0,
-            monitor_frequency=60,
+            monitor_frequency=MONITORING_FREQUENCY,
             strategy_description=("A linear baseline model for classification tasks."),
-            execution_frequency=60,
-            allocation_pct = .025,
-            s3_key = "models/logistic_regression.pkl",
-            local_path = "models/logistic_regression.pkl"
+            execution_frequency= 60 * 5,
+            allocation_pct = .05,
+            reset_interval = 60 *60 * 4,
+            s3_key = "models/Logistic-Regression-ETH-model.pkl",
+            local_path = "models/Logistic-Regression-ETH-model.pkl"
         ),
         StrategyTemplate(
             stop_event=stop_event,
@@ -68,12 +133,13 @@ def get_strategies(stop_event):
             strategy_name="LSTM",
             starting_cash=200000,
             starting_mv=0,
-            monitor_frequency=60,
+            monitor_frequency=MONITORING_FREQUENCY,
             strategy_description=("Captures temporal dependencies and sequential patterns in data."),
-            execution_frequency=300,
-            allocation_pct = .15,
-            s3_key = "models/lstm.h5",
-            local_path = "models/lstm.h5"
+            execution_frequency= 60 * 15,
+            allocation_pct = .25,
+            reset_interval = 60 * 60 * 12,
+            s3_key = "models/LSTM-ETH-model.h5",
+            local_path = "models/LSTM-ETH-model.h5"
         ),
         StrategyTemplate(
             stop_event=stop_event,
@@ -82,12 +148,13 @@ def get_strategies(stop_event):
             strategy_name="SVM",
             starting_cash=200000,
             starting_mv=0,
-            monitor_frequency=60,
+            monitor_frequency=MONITORING_FREQUENCY,
             strategy_description=(" Separates classes using non-linear decision boundaries."),
-            execution_frequency=120,
+            execution_frequency= 60 * 10,
             allocation_pct = .125,
-            s3_key = "models/svm_(rbf_kernel).pkl",
-            local_path = "models/svm_(rbf_kernel).pkl"
+            reset_interval = 60 * 60 * 8,
+            s3_key = "models/SVM-(RBF-Kernel)-ETH-model.pkl",
+            local_path = "models/SVM-(RBF-Kernel)-ETH-model.pkl"
         ),
         
     ]
